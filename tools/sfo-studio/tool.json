@@ -1,0 +1,19 @@
+{
+  "api": 1,
+  "name": "SFO Studio",
+  "description": "Inspect and edit PSP PARAM.SFO metadata with typed fields and lossless binary preservation.",
+  "author": "PSP Modding Studio",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": [
+    ".sfo"
+  ],
+  "keywords": [
+    "param.sfo",
+    "metadata",
+    "disc id",
+    "title",
+    "firmware",
+    "psp"
+  ]
+}

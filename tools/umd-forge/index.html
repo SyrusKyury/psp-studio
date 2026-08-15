@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>UMD Forge</title>
+  <link rel="stylesheet" href="./vendor/css/tokens.css">
+  <link rel="stylesheet" href="./vendor/css/base.css">
+  <link rel="stylesheet" href="./style.css?v=1.3.2">
+</head>
+<body class="tool-page">
+  <main class="umd-forge" id="umd-app">
+    <header class="umd-toolbar" aria-label="UMD Forge commands">
+      <div class="umd-toolbar-group">
+        <button class="umd-command icon-only" id="umd-new" type="button" title="New compilation (Ctrl/Cmd+N)"><span class="umd-command-icon" data-command-icon="filePlus"></span></button>
+        <button class="umd-command prominent" id="umd-open" type="button" title="Open ISO/CSO/DAX (Ctrl/Cmd+O)">
+          <span class="umd-command-icon" data-command-icon="open"></span><span>Open image</span>
+        </button>
+      </div>
+      <div class="umd-toolbar-separator"></div>
+      <div class="umd-toolbar-group">
+        <button class="umd-command" id="umd-add" type="button" disabled title="Add file">
+          <span class="umd-command-icon" data-command-icon="filePlus"></span><span>Add</span>
+        </button>
+        <button class="umd-command icon-only" id="umd-folder" type="button" disabled title="New folder (Ctrl/Cmd+F)">
+          <span class="umd-command-icon" data-command-icon="folderPlus"></span>
+        </button>
+        <button class="umd-command icon-only" id="umd-import-folder" type="button" disabled title="Import a folder tree">
+          <span class="umd-command-icon" data-command-icon="open"></span>
+        </button>
+        <button class="umd-command icon-only" id="umd-rename" type="button" disabled title="Rename (Ctrl/Cmd+R or F2)">
+          <span class="umd-command-icon" data-command-icon="rename"></span>
+        </button>
+        <button class="umd-command icon-only danger" id="umd-delete" type="button" disabled title="Delete">
+          <span class="umd-command-icon" data-command-icon="trash"></span>
+        </button>
+      </div>
+      <div class="umd-toolbar-separator"></div>
+      <div class="umd-toolbar-group">
+        <button class="umd-command" id="umd-extract" type="button" disabled title="Extract selected file or folder  |  Ctrl/Cmd+E extracts the full image">
+          <span class="umd-command-icon" data-command-icon="extract"></span><span>Extract</span>
+        </button>
+        <button class="umd-command" id="umd-replace" type="button" disabled title="Replace selected file">
+          <span class="umd-command-icon" data-command-icon="replace"></span><span>Replace</span>
+        </button>
+      </div>
+      <div class="umd-toolbar-separator"></div>
+      <div class="umd-toolbar-group">
+        <button class="umd-command icon-only" id="umd-overview-view" type="button" disabled title="Disc overview">
+          <span class="umd-command-icon" data-command-icon="home"></span>
+        </button>
+        <button class="umd-command" id="umd-properties-view" type="button" disabled title="UMD / ISO properties (Ctrl/Cmd+P)">
+          <span class="umd-command-icon" data-command-icon="info"></span><span>Properties</span>
+        </button>
+        <button class="umd-command" id="umd-layout-view" type="button" disabled title="Open disc layout / LBA view">
+          <span class="umd-command-icon" data-command-icon="list"></span><span>Layout</span>
+        </button>
+        <button class="umd-command" id="umd-sector-view" type="button" disabled title="Sector / LBA hex viewer">
+          <span class="umd-command-icon" data-command-icon="sector"></span><span>Sectors</span>
+        </button>
+        <button class="umd-command icon-only" id="umd-filelist-export" type="button" disabled title="Export file list / LBA map">
+          <span class="umd-command-icon" data-command-icon="exportList"></span>
+        </button>
+        <button class="umd-command icon-only" id="umd-filelist-import" type="button" disabled title="Import file list / preserve LBAs">
+          <span class="umd-command-icon" data-command-icon="importList"></span>
+        </button>
+      </div>
+      <div class="umd-toolbar-separator"></div>
+      <div class="umd-toolbar-group">
+        <button class="umd-command" id="umd-patch-menu" type="button" disabled title="Create or apply patches">
+          <span class="umd-command-icon" data-command-icon="patch"></span><span>Patch</span>
+        </button>
+      </div>
+      <div class="umd-toolbar-separator"></div>
+      <div class="umd-toolbar-group compact">
+        <button class="umd-command icon-only" id="umd-layout-up" type="button" disabled title="Move earlier in disc order"><span class="umd-command-icon" data-command-icon="up"></span></button>
+        <button class="umd-command icon-only" id="umd-layout-down" type="button" disabled title="Move later in disc order"><span class="umd-command-icon" data-command-icon="down"></span></button>
+        <button class="umd-command icon-only" id="umd-undo" type="button" disabled title="Undo (Ctrl/Cmd+Z)"><span class="umd-command-icon" data-command-icon="undo"></span></button>
+        <button class="umd-command icon-only" id="umd-redo" type="button" disabled title="Redo (Ctrl/Cmd+Shift+Z)"><span class="umd-command-icon" data-command-icon="redo"></span></button>
+      </div>
+      <button class="umd-command icon-only" id="umd-options" type="button" title="UMDGen-compatible image options">
+        <span class="umd-command-icon" data-command-icon="settings"></span>
+      </button>
+      <div class="spacer"></div>
+      <div class="umd-document-name" title="Current image">
+        <span class="umd-document-dot"></span>
+        <span id="umd-file-name">No image loaded</span>
+      </div>
+      <div class="umd-toolbar-group umd-save-actions" aria-label="Save image">
+        <button class="umd-command save" id="umd-save-iso" type="button" disabled title="Save as ISO (Ctrl/Cmd+S)">
+          <span class="umd-command-icon" data-command-icon="save"></span><span>Save ISO</span>
+        </button>
+        <button class="umd-command" id="umd-save-cso" type="button" disabled title="Save as CSO (Ctrl/Cmd+C)">
+          <span class="umd-command-icon" data-command-icon="disc"></span><span>Save CSO</span>
+        </button>
+        <button class="umd-command" id="umd-save-dax" type="button" disabled title="Save as DAX (Ctrl/Cmd+D)">
+          <span class="umd-command-icon" data-command-icon="disc"></span><span>Save DAX</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="umd-body" id="umd-body" aria-live="polite"></section>
+
+    <footer class="umd-statusbar">
+      <div class="umd-status-main"><span class="umd-status-dot"></span><span id="umd-status">Ready</span></div>
+      <span class="umd-status-separator"></span>
+      <span class="umd-change-count" id="umd-changes">0 edits</span>
+      <span class="umd-status-separator"></span>
+      <span class="umd-save-mode" id="umd-save-mode">patch</span>
+      <div class="spacer"></div>
+      <div class="umd-progress hidden" id="umd-progress" aria-label="Operation progress"><span></span></div>
+      <span id="umd-size"></span>
+    </footer>
+
+    <input class="hidden" id="umd-file-input" type="file" accept=".iso,.cso,.dax,application/x-iso9660-image">
+    <input class="hidden" id="umd-replace-input" type="file">
+    <input class="hidden" id="umd-add-input" type="file" multiple>
+    <input class="hidden" id="umd-folder-input" type="file" multiple webkitdirectory directory>
+    <input class="hidden" id="umd-patch-input" type="file" accept=".umdpatch,application/zip">
+    <input class="hidden" id="umd-ppf-input" type="file" accept=".ppf">
+    <input class="hidden" id="umd-filelist-input" type="file" accept=".txt,text/plain">
+
+    <dialog class="umd-dialog" id="umd-dialog">
+      <form method="dialog" id="umd-dialog-form">
+        <div class="umd-dialog-head">
+          <div><span class="umd-dialog-kicker" id="umd-dialog-kicker">UMD Forge</span><h3 id="umd-dialog-title">Enter a value</h3></div>
+          <button class="umd-dialog-close" value="cancel" type="submit" aria-label="Close">×</button>
+        </div>
+        <p id="umd-dialog-message" class="umd-dialog-message"></p>
+        <label class="umd-dialog-field" id="umd-dialog-field"><span id="umd-dialog-label">Name</span><input id="umd-dialog-input" autocomplete="off" spellcheck="false"></label>
+        <div class="umd-dialog-actions"><button class="umd-dialog-button" value="cancel" type="submit">Cancel</button><button class="umd-dialog-button primary" id="umd-dialog-submit" value="default" type="submit">Continue</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="umd-dialog umd-patch-dialog" id="umd-patch-dialog">
+      <form method="dialog" id="umd-patch-dialog-form">
+        <div class="umd-dialog-head">
+          <div><span class="umd-dialog-kicker">UMD Forge</span><h3>Patches</h3></div>
+          <button class="umd-dialog-close" value="cancel" type="submit" aria-label="Close">×</button>
+        </div>
+        <div class="umd-patch-actions">
+          <button type="button" data-patch-action="create"><span data-command-icon="patch"></span><span><strong>Create .umdpatch...</strong><small>Package the current workspace edits into a reusable patch.</small></span></button>
+          <button type="button" data-patch-action="apply"><span data-command-icon="open"></span><span><strong>Apply .umdpatch...</strong><small>Apply a UMD Forge patch to the currently opened image.</small></span></button>
+          <button type="button" data-patch-action="ppf"><span data-command-icon="patch"></span><span><strong>Apply PPF...</strong><small>Apply a PPF 1.0, 2.0 or 3.0 patch with validation.</small></span></button>
+          <button type="button" data-patch-action="ppf-undo"><span data-command-icon="undo"></span><span><strong>Undo PPF 3.0...</strong><small>Restore data using the undo block embedded in a PPF 3.0 patch.</small></span></button>
+        </div>
+        <div class="umd-dialog-actions"><button class="umd-dialog-button" value="cancel" type="submit">Close</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="umd-dialog umd-options-dialog" id="umd-options-dialog">
+      <form method="dialog" id="umd-options-form">
+        <div class="umd-dialog-head">
+          <div><span class="umd-dialog-kicker">UMD Forge</span><h3>Image options</h3></div>
+          <button class="umd-dialog-close" value="cancel" type="submit" aria-label="Close">×</button>
+        </div>
+        <div class="umd-options-content">
+          <fieldset class="umd-options-group">
+            <legend>Rebuild padding</legend>
+            <label class="umd-option-choice"><input type="radio" name="padding-mode" value="standard"><span><strong>UMD standard / source gaps</strong><small>Preserve original inter-file placement where possible.</small></span></label>
+            <label class="umd-option-choice"><input type="radio" name="padding-mode" value="none" checked><span><strong>No extra padding</strong><small>Compact rebuilt file data unless LBAs are explicitly locked.</small></span></label>
+            <label class="umd-option-choice"><input type="radio" name="padding-mode" value="custom"><span><strong>Custom padding</strong><small>Add a fixed number of 2048-byte sectors between files.</small></span></label>
+            <label class="umd-option-inline">Custom sectors <input id="umd-padding-sectors" type="number" min="0" max="1048576" value="0" inputmode="numeric"></label>
+          </fieldset>
+          <fieldset class="umd-options-group">
+            <legend>CSO / DAX compression</legend>
+            <label class="umd-option-choice"><input id="umd-dax-nc" type="checkbox" checked><span><strong>Use DAX non-compressed areas</strong><small>Store incompressible frames raw instead of wasting CPU and space.</small></span></label>
+            <label class="umd-option-choice"><input id="umd-dax-video-nc" type="checkbox"><span><strong>Force video files to NC</strong><small>Keep PMF/MPS/PSMF and common video payloads uncompressed in DAX.</small></span></label>
+            <label class="umd-option-choice"><input id="umd-dax-audio-nc" type="checkbox"><span><strong>Force audio files to NC</strong><small>Keep AT3/AA3/OMA and common audio payloads uncompressed in DAX.</small></span></label>
+            <label class="umd-option-inline">Frame candidate size <input id="umd-dax-frame-candidate" type="number" min="1" max="8192" value="8192" inputmode="numeric"></label>
+          </fieldset>
+        </div>
+        <div class="umd-dialog-actions"><button class="umd-dialog-button" value="cancel" type="submit">Cancel</button><button class="umd-dialog-button primary" id="umd-options-apply" value="default" type="submit">Apply</button></div>
+      </form>
+    </dialog>
+
+    <div class="umd-context-menu" id="umd-context-menu" role="menu"></div>
+    <div class="umd-local-toasts" id="umd-local-toasts" aria-live="polite"></div>
+  </main>
+  <script type="module" src="./tool.js?v=1.3.2"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "core": [
+    "umd-forge",
+    "sfo-studio",
+    "image-studio"
+  ],
+  "tools": []
+}

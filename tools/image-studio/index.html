@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Image Studio</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="image-studio">
+    <header class="image-toolbar">
+      <div class="image-toolbar-main">
+        <div class="eyebrow">Image Studio</div>
+        <div class="image-toolbar-title">Edit in Photopea, then drag the exported asset back into your workspace.</div>
+        <div class="image-toolbar-actions">
+          <button class="button" id="image-open" type="button">Open image</button>
+          <button class="button" id="image-download" type="button" disabled>Export copy</button>
+        </div>
+      </div>
+      <div class="image-toolbar-meta">
+        <span class="image-engine"><span class="engine-dot" id="engine-dot"></span><span id="engine-status">Connecting to Photopea...</span></span>
+        <input class="hidden" id="image-input" type="file" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+      </div>
+    </header>
+
+    <div class="image-stage-wrap">
+      <section class="image-stage-panel">
+        <div class="image-canvas-toolbar">
+          <button type="button" title="Open image" id="image-open-aux">Open</button>
+          <button type="button" title="Export copy" id="image-download-aux">Export</button>
+          <span class="image-toolbar-separator"></span>
+          <span class="image-canvas-meta">Embedded editor</span>
+        </div>
+        <main class="image-stage">
+          <div class="image-loading" id="image-loading">
+            <div class="image-loading-card"><div class="spinner"></div><strong>Loading Image Studio</strong><span>Connecting to the Photopea editor...</span></div>
+          </div>
+          <iframe id="photopea-frame" class="photopea-frame" src="https://www.photopea.com#%7B%22environment%22%3A%7B%7D%7D" title="Photopea image editor" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </main>
+      </section>
+
+      <aside class="image-export-panel">
+        <div class="image-panel-title">Workspace Export</div>
+        <div class="image-export-copy">
+          <strong>Export back into the project via drag &amp; drop.</strong>
+          <p>The tile below is the bridge between Image Studio and the Studio workspace. Drag it into the Project Explorer when your asset is ready. You can also use <span class="mono">Export copy</span> to save a separate file on your computer.</p>
+        </div>
+        <div class="image-export-tile-wrap">
+          <div class="image-drag-hint">Drag this tile to the project explorer</div>
+          <div class="image-resource" id="image-resource" data-file="image.png" title="Drag this tile into the Project Explorer to bring the edited image back into the workspace">
+            <div class="image-resource-top"><span class="image-resource-icon">IMG</span><span class="image-resource-pill">Workspace asset</span></div>
+            <div class="image-resource-body">
+              <span id="image-file-name">No image</span>
+              <small id="image-export-hint">Open an image to prepare an export tile.</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="image-statusbar">
+      <span id="image-status">Image Studio uses Photopea in an embedded frame and requires Internet access.</span>
+      <div class="spacer"></div><span id="image-format">-</span>
+    </footer>
+  </div>
+  <script type="module" src="./tool.js"></script>
+  <script>
+    document.getElementById('image-open-aux')?.addEventListener('click', () => document.getElementById('image-open')?.click());
+    document.getElementById('image-download-aux')?.addEventListener('click', () => document.getElementById('image-download')?.click());
+  </script>
+</body>
+</html>

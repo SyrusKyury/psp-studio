@@ -1,0 +1,15 @@
+.button,.icon-button{border:1px solid var(--border-strong);background:var(--surface-2);border-radius:3px;color:var(--text);transition:.1s ease;box-shadow:none}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:28px;padding:4px 10px;font-size:12px;font-weight:500}
+.button:hover,.icon-button:hover{background:var(--surface-3);border-color:color-mix(in srgb,var(--accent) 24%,var(--border-strong))}
+.button.primary{background:var(--accent2);border-color:color-mix(in srgb,var(--accent2) 75%,#000);color:#fff}.button.primary:hover{background:var(--accent)}
+.button.danger-soft{color:var(--danger)}.button.danger-soft:hover{background:color-mix(in srgb,var(--danger) 10%,var(--surface-2))}
+.button:disabled,.icon-button:disabled{opacity:.42;cursor:not-allowed}.icon-button{display:grid;place-items:center;width:28px;height:28px;padding:0}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;background:var(--surface-3);color:var(--muted);font-size:10px;font-weight:600;border:1px solid var(--border)}
+.badge.accent{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 25%,var(--border))}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;margin-bottom:5px;color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.spacer{flex:1}.divider{width:1px;height:18px;background:var(--border);margin:0 3px}
+.toast-root{position:fixed;right:16px;bottom:34px;z-index:1000;display:grid;gap:8px;width:min(360px,calc(100vw - 32px));pointer-events:none}
+.toast{padding:10px 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);box-shadow:var(--shadow);font-size:12px;animation:toast-in .12s ease both}.toast.error{border-color:color-mix(in srgb,var(--danger) 46%,var(--border-strong))}.toast.success{border-color:color-mix(in srgb,var(--success) 46%,var(--border-strong))}@keyframes toast-in{from{opacity:0;transform:translateY(4px)}}
+
+.studio-input{height:28px;border:1px solid var(--border-strong);border-radius:2px;background:var(--bg2);color:var(--text);padding:0 8px;outline:0}.studio-input:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.ui-icon{display:inline-block;width:1em;height:1em;flex:0 0 auto;background:currentColor;-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}.icon-new-project{--icon:url("../ui-icons/new-project.svg")}.icon-open-project{--icon:url("../ui-icons/open-project.svg")}.icon-save{--icon:url("../ui-icons/save.svg")}.icon-explorer{--icon:url("../ui-icons/explorer.svg")}.icon-search{--icon:url("../ui-icons/search.svg")}.icon-tool-library{--icon:url("../ui-icons/tool-library.svg")}.icon-help{--icon:url("../ui-icons/help.svg")}.icon-file-plus{--icon:url("../ui-icons/file-plus.svg")}.icon-folder-plus{--icon:url("../ui-icons/folder-plus.svg")}.icon-import{--icon:url("../ui-icons/import.svg")}

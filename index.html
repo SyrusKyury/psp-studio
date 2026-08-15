@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" href="./assets/tool-default.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PSP Modding Studio Online - browser-based PSP modding workspace.">
+  <meta name="color-scheme" content="dark">
+  <title>PSP Modding Studio</title>
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=0.14.3">
+  <link rel="stylesheet" href="./assets/css/base.css?v=0.14.3">
+  <link rel="stylesheet" href="./assets/css/shell.css?v=0.14.3">
+  <link rel="stylesheet" href="./assets/css/components.css?v=0.14.3">
+</head>
+<body>
+  <div id="app" class="studio-shell">
+    <header class="studio-topbar">
+      <div class="studio-appmark" title="PSP Modding Studio" aria-label="PSP Modding Studio">PS</div>
+      <div class="topbar-actions" aria-label="Project commands">
+        <button class="topbar-button" type="button" data-shell-command="new" title="New Project (Ctrl+N)" aria-label="New Project"><span class="ui-icon icon-new-project"></span></button>
+        <button class="topbar-button" type="button" data-shell-command="open" title="Open Project (Ctrl+O)" aria-label="Open Project"><span class="ui-icon icon-open-project"></span></button>
+        <button class="topbar-button" id="save-project" type="button" data-shell-command="save" title="Save Project (Ctrl+S)" aria-label="Save Project" disabled><span class="ui-icon icon-save"></span></button>
+      </div>
+      <div class="topbar-project" id="project-title">No project</div>
+    </header>
+
+    <div class="studio-body ide-workspace">
+      <aside class="activity-bar" aria-label="Studio activities">
+        <button class="activity-button active" id="activity-explorer" type="button" title="Project Explorer (Ctrl+B)" aria-label="Project Explorer"><span class="ui-icon icon-explorer"></span></button>
+        <button class="activity-button" id="activity-search" type="button" title="Search Project" aria-label="Search Project"><span class="ui-icon icon-search"></span></button>
+        <div class="activity-tools-list" id="activity-tools-list" aria-label="Pinned workspace tools"></div>
+        <div class="activity-bottom">
+          <button class="activity-button" id="activity-tool-library" type="button" data-open-library title="Tool Library" aria-label="Tool Library"><span class="ui-icon icon-tool-library"></span></button>
+          <a class="activity-button" href="./help.html" target="_blank" rel="noopener" title="Help" aria-label="Help"><span class="ui-icon icon-help"></span></a>
+        </div>
+      </aside>
+
+      <aside class="project-sidebar ide-left-dock" id="project-sidebar">
+        <div id="project-explorer" class="project-explorer"></div>
+        <div id="project-search" class="project-search hidden"></div>
+      </aside>
+
+      <section class="editor-shell ide-center-dock">
+        <div class="document-tabs" id="document-tabs"></div>
+        <main class="tab-content" id="tab-content"></main>
+      </section>
+    </div>
+  </div>
+
+  <div class="project-gate" id="project-gate"><div class="project-gate-card"><div class="gate-logo">PS</div><div class="eyebrow">PSP Modding Studio</div><h1>Start with a project</h1><p>A project is your local workspace: files, folders and work-in-progress assets that you can move between PSP tools.</p><div class="gate-actions"><button class="button primary" data-shell-command="new" type="button">New Project</button><button class="button" data-shell-command="open" type="button">Open .pspstudio</button></div><small>Projects are ZIP-based and stay on your computer.</small></div></div>
+  <input class="hidden" id="project-open-input" type="file" accept=".pspstudio,application/zip">
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div><div id="modal-root"></div>
+  <script type="module" src="./js/app.js?v=0.14.3"></script>
+</body>
+</html>

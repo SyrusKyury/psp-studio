@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>SFO Studio</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="sfo-studio">
+    <header class="sfo-toolbar">
+      <button class="button" id="sfo-open" type="button">Open SFO</button>
+      <button class="button" id="sfo-add" type="button" disabled>Add entry</button>
+      <span class="divider"></span>
+      <input class="sfo-search" id="sfo-search" type="search" placeholder="Filter keys..." autocomplete="off" disabled>
+      <div class="spacer"></div>
+      <div class="sfo-current" id="sfo-current" data-file="PARAM.SFO" title="Drag the edited SFO into the Project Explorer">
+        <span class="sfo-current-dot"></span><span id="sfo-file-name">No file</span>
+      </div>
+      <button class="button primary" id="sfo-save" type="button" disabled>Download SFO</button>
+      <input class="hidden" id="sfo-input" type="file" accept=".sfo,application/octet-stream">
+    </header>
+
+    <main class="sfo-main" id="sfo-main">
+      <section class="sfo-welcome" id="sfo-welcome">
+        <div class="sfo-welcome-card">
+          <div class="sfo-logo">SFO</div>
+          <div class="eyebrow">PSP metadata editor</div>
+          <h1>Open a PARAM.SFO</h1>
+          <p>Edit strings, integers and binary values without converting the file into another format. Unknown entries are preserved.</p>
+          <button class="button primary" id="sfo-welcome-open" type="button">Choose PARAM.SFO</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="sfo-statusbar">
+      <span id="sfo-status">Ready</span><span class="status-separator">|</span><span id="sfo-entry-count">0 entries</span>
+      <div class="spacer"></div><span id="sfo-version">PSF -</span>
+    </footer>
+  </div>
+  <script type="module" src="./tool.js"></script>
+</body>
+</html>

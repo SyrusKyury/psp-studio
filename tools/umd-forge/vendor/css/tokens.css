@@ -1,0 +1,9 @@
+:root{
+  color-scheme:dark;
+  --bg:#181818;--bg2:#1e1e1e;--panel:#252526;--panel2:#2d2d30;--panel3:#333337;--line:#3d3d42;--line2:#4b4b50;
+  --text:#dcdcdc;--muted:#9a9a9f;--muted2:#737379;--accent:#3794ff;--accent2:#007acc;--success:#57c7a0;--warning:#d7a44a;--danger:#f14c4c;
+  --select:#094771;--hover:#2a2d2e;--surface:#252526;--surface-2:#2d2d30;--surface-3:#333337;
+  --border:#3d3d42;--border-strong:#4b4b50;--accent-soft:rgba(55,148,255,.18);
+  --shadow:0 10px 32px rgba(0,0,0,.35);--shadow-soft:0 4px 14px rgba(0,0,0,.22);
+  --font:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;--font-display:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;--mono:"Cascadia Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}

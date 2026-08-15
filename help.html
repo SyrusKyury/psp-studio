@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" href="./assets/tool-default.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Complete user and developer documentation for PSP Modding Studio.">
+  <title>PSP Modding Studio - Documentation</title>
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=0.14.3">
+  <link rel="stylesheet" href="./assets/css/base.css?v=0.14.3">
+  <link rel="stylesheet" href="./assets/css/help.css?v=0.14.3">
+</head>
+<body class="help-body">
+  <header class="help-topbar">
+    <a class="help-brand" href="./index.html" aria-label="Back to PSP Modding Studio"><span class="help-brand-mark">PS</span><span>PSP Modding Studio</span></a>
+    <a class="help-back" href="./index.html">Back to Studio</a>
+  </header>
+
+  <div class="help-layout">
+    <aside class="help-toc" aria-label="Documentation navigation">
+      <div class="help-toc-title">Documentation</div>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#philosophy">Philosophy</a>
+        <a href="#quick-start">Quick start</a>
+        <a href="#interface">Interface</a>
+        <a href="#projects">Projects</a>
+        <a href="#explorer">Project Explorer</a>
+        <a href="#search">Search</a>
+        <a href="#tool-library">Tool Library</a>
+        <a href="#open-with">Open With</a>
+        <a href="#transfers">Drag &amp; drop</a>
+        <a href="#shortcuts">Keyboard shortcuts</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="#limits">Limits &amp; boundaries</a>
+        <div class="help-toc-separator"></div>
+        <a class="developer-link" href="#developer-guide">Developer guide</a>
+        <a href="#tool-anatomy">Tool anatomy</a>
+        <a href="#manifest">tool.json</a>
+        <a href="#catalog">Catalog registration</a>
+        <a href="#tool-api">Tool API v1</a>
+        <a href="#semantic-resources">Semantic resources</a>
+        <a href="#studio-bridge">window.studio</a>
+        <a href="#developer-lifecycle">Lifecycle &amp; errors</a>
+        <a href="#developer-example">Complete example</a>
+        <a href="#developer-checklist">Release checklist</a>
+      </nav>
+    </aside>
+
+    <main class="help-content">
+      <header class="help-hero" id="overview">
+        <div class="help-kicker">PSP Modding Studio v0.14.3</div>
+        <h1>Platform documentation</h1>
+        <p class="help-lead">PSP Modding Studio is a browser-based workspace for PSP modding. The Studio manages projects, files, tabs, search, tool discovery and data transfers. Individual editors live in independent <strong>Tools</strong> hosted by the Studio.</p>
+        <div class="help-callout important"><strong>The central rule:</strong> the Studio owns the workspace; tools own editing. A tool should never need to know how the Project Explorer, tab system, Tool Library or project persistence are implemented.</div>
+      </header>
+
+      <section id="philosophy">
+        <h2>1. Philosophy</h2>
+        <p>PSP Modding Studio deliberately separates the <strong>wrapper</strong> from the editors that run inside it. The wrapper is intentionally generic: it knows files, folders, project preferences and tool metadata, but it does not know what an ISO, SFO, PRX, texture, script or game-specific format means.</p>
+        <p>This makes the platform scalable. A new editor can be added without teaching the Studio its internal file format, UI or workflow. In the codebase these plugin-like components are called <strong>Tools</strong>.</p>
+
+        <div class="help-grid two">
+          <article class="help-card">
+            <h3>The Studio owns</h3>
+            <ul>
+              <li>Projects and <code>.pspstudio</code> persistence.</li>
+              <li>Project Explorer and workspace file operations.</li>
+              <li>Search across project files.</li>
+              <li>Tool discovery and compatibility matching.</li>
+              <li>Open With, pins, suggestions and file associations.</li>
+              <li>Document tabs and tool iframe lifecycle.</li>
+              <li>Safe drag-and-drop routing between project and tools.</li>
+            </ul>
+          </article>
+          <article class="help-card">
+            <h3>Each Tool owns</h3>
+            <ul>
+              <li>Its own UI and internal state.</li>
+              <li>Parsing and rebuilding its file formats.</li>
+              <li>Tool-specific validation and editing rules.</li>
+              <li>Tool-specific previews, inspectors, properties and shortcuts.</li>
+              <li>Any optional external services or libraries it needs.</li>
+            </ul>
+          </article>
+        </div>
+
+        <h3>What the Studio intentionally does not do</h3>
+        <p>The wrapper does not parse an ISO just because an ISO is present in the project. It does not inspect an SFO to decide which tools should exist. It does not contain a game registry. It does not provide a global inspector for tool-specific properties. It also does not expose an API that lets one tool hard-code and launch another tool by ID.</p>
+        <p>When a responsibility is format-specific, it belongs to a Tool. When it is workspace-wide and format-agnostic, it belongs to the Studio.</p>
+      </section>
+
+      <section id="quick-start">
+        <h2>2. Quick start</h2>
+        <ol class="help-steps">
+          <li><strong>Create or open a project.</strong> Use the New/Open icons in the top bar. A project is required before tools and workspace operations are enabled.</li>
+          <li><strong>Add files.</strong> In Project Explorer use <em>New file</em>, <em>New folder</em> or <em>Import files</em>. You can also drag files from the operating system into the Explorer.</li>
+          <li><strong>Open a file.</strong> Double-click it or press <kbd>Enter</kbd>. The Studio chooses a compatible tool or opens the Open With dialog.</li>
+          <li><strong>Edit inside the tool.</strong> Each tool runs in its own tab and controls its own editing UI.</li>
+          <li><strong>Move results back to the project.</strong> If a tool exposes a draggable file/folder resource, drag it into Project Explorer.</li>
+          <li><strong>Save the project.</strong> Use the Save icon or <kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>⌘</kbd>+<kbd>S</kbd>. The project is saved as a <code>.pspstudio</code> file.</li>
+        </ol>
+
+        <div class="help-callout"><strong>No server-side workspace exists.</strong> The Studio is a static client-side application. Your project is in memory until you save it. Individual tools may have their own network requirements, but the wrapper itself does not upload your project to a backend.</div>
+      </section>
+
+      <section id="interface">
+        <h2>3. Interface</h2>
+
+        <h3>Top bar</h3>
+        <p>The top bar contains only the three global project actions that need to be permanently visible:</p>
+        <dl class="help-definitions">
+          <div><dt>New project</dt><dd>Creates a new empty workspace.</dd></div>
+          <div><dt>Open project</dt><dd>Loads a previously saved <code>.pspstudio</code> file.</dd></div>
+          <div><dt>Save project</dt><dd>Writes the current workspace back to a <code>.pspstudio</code> file.</dd></div>
+        </dl>
+        <p>The project name appears in the same bar. An asterisk (<code>*</code>) means that the project contains changes that have not yet been saved.</p>
+
+        <h3>Activity rail</h3>
+        <p>The vertical rail is the Studio's permanent navigation surface:</p>
+        <ul>
+          <li><strong>Explorer</strong> - shows Project Explorer.</li>
+          <li><strong>Search</strong> - searches filenames and file contents across the project.</li>
+          <li><strong>Pinned tools</strong> - workspace-specific tool shortcuts appear between Search and the lower utility section.</li>
+          <li><strong>Tool Library</strong> - browses the bundled tool catalog and manages pins.</li>
+          <li><strong>Help</strong> - opens this documentation in a separate browser tab.</li>
+        </ul>
+        <p>Explorer and Search reuse the same left sidebar. Clicking the active Explorer/Search icon again collapses the sidebar.</p>
+
+        <h3>Document tabs</h3>
+        <p>Tools and Studio-owned utility pages such as Tool Library open in the central document area. Switching tabs leaves a tool alive. Closing a tool tab destroys that tool instance.</p>
+        <p>A dot next to a tab title means the tool has declared its own internal state dirty. This is separate from the project dirty state: a tool can contain unsaved internal edits even when the <code>.pspstudio</code> project itself has not changed.</p>
+      </section>
+
+      <section id="projects">
+        <h2>4. Projects and <code>.pspstudio</code></h2>
+        <p>A project is a generic tree of files and folders plus a small amount of workspace metadata. The project does not contain tool-specific models or parsed objects.</p>
+
+        <h3>What is saved</h3>
+        <ul>
+          <li>Every project file and folder.</li>
+          <li>The project name.</li>
+          <li>Pinned tool IDs.</li>
+          <li>Suggested tool IDs.</li>
+          <li>Open With file associations.</li>
+          <li>Restorable tool-tab descriptors.</li>
+        </ul>
+        <p>Search results, temporary drag operations, modal dialogs and tool runtime memory are not persisted.</p>
+
+        <h3>File format</h3>
+        <p>A <code>.pspstudio</code> file is a ZIP-based container. At a high level it looks like:</p>
+        <pre><code>project.pspstudio
+|--- project.json
+`--- workspace/
+    |--- EBOOT.BIN
+    |--- PARAM.SFO
+    `--- assets/
+        `--- icon.png</code></pre>
+        <p><code>project.json</code> contains project metadata and workspace preferences. User files live under <code>workspace/</code>. The format is intentionally simple enough to inspect for recovery purposes, but manual edits are not recommended because the Studio validates archive structure, paths, sizes and checksums when opening it.</p>
+        <p>A simplified manifest looks like:</p>
+        <pre><code>{
+  "format": "psp-modding-studio-project",
+  "version": 1,
+  "name": "My PSP Project",
+  "savedAt": "2026-08-14T12:00:00.000Z",
+  "workspace": {
+    "pinnedTools": ["sfo-studio"],
+    "suggestedTools": ["image-studio"],
+    "fileAssociations": {
+      "name:param.sfo": "sfo-studio"
+    }
+  },
+  "tabs": []
+}</code></pre>
+        <p>This is documented for transparency and recovery, not as a plugin interface. Tool authors should not edit <code>project.json</code> or depend on its internal persistence details.</p>
+
+        <h3>Saving</h3>
+        <p>When the browser supports the File System Access API, the Studio can reuse a selected file handle and save directly to it. In other browsers it falls back to a normal browser download.</p>
+        <p>Saving is revision-safe. If the project changes while a large save is being generated, the saved snapshot remains valid but the Studio keeps the project marked dirty so that the later change cannot be mistaken for already-saved data.</p>
+
+        <h3>Restoring tabs</h3>
+        <p>The Studio stores lightweight descriptors for tool tabs. On reopen it attempts to restore them if the referenced tool and file still exist. Failure to restore a tool does not prevent the project from opening and does not delete project files.</p>
+      </section>
+
+      <section id="explorer">
+        <h2>5. Project Explorer</h2>
+        <p>Project Explorer is the canonical view of the workspace tree. File and folder mutations belong here rather than inside a global Edit/Project menu.</p>
+
+        <h3>Header actions</h3>
+        <dl class="help-definitions">
+          <div><dt>New file</dt><dd>Creates a new empty binary file in the selected folder. The initial content is zero bytes; the filename determines which tools may later accept it.</dd></div>
+          <div><dt>New folder</dt><dd>Creates an empty project folder.</dd></div>
+          <div><dt>Import files</dt><dd>Selects one or more existing files from your computer and copies their contents into the project.</dd></div>
+        </dl>
+        <p><strong>New file and Import are intentionally different.</strong> New file creates something that did not exist before; Import copies existing local files into the workspace.</p>
+
+        <h3>Context menu</h3>
+        <p>Right-click a node for the operations relevant to that node:</p>
+        <ul>
+          <li>Open / Open With for files.</li>
+          <li>New File / New Folder / Import Files for folders.</li>
+          <li>Rename, Copy, Paste and Delete where applicable.</li>
+        </ul>
+        <p>Copy/Paste uses an Explorer-owned in-memory clipboard. It does not depend on the operating system clipboard and does not duplicate file Blobs in memory just to perform the copy.</p>
+
+        <h3>Drag and drop</h3>
+        <p>The entire Explorer surface is a valid drop area:</p>
+        <ul>
+          <li>Drop on a folder -> the item goes into that folder.</li>
+          <li>Drop on a file -> the item goes into that file's parent folder.</li>
+          <li>Drop on empty Explorer space -> the item goes into the project root.</li>
+        </ul>
+        <p>Dragging an existing project node moves it. Dragging native files from the operating system imports them. Dragging a semantic resource from a tool copies the tool's exported data into the project.</p>
+      </section>
+
+      <section id="search">
+        <h2>6. Workspace Search</h2>
+        <p>Search is wrapper-owned because it operates across the project rather than inside one file format. It deliberately stays simple: exact filename/content search, no persistent index and no format-specific parsers.</p>
+
+        <h3>Filename search</h3>
+        <p>Every query also searches project paths. Filename/path matching is case-insensitive and is available for all files regardless of size.</p>
+
+        <h3>Text search</h3>
+        <p>Text mode converts the query to UTF-8 and searches for that exact byte sequence. Content matching is exact and therefore case-sensitive.</p>
+        <pre><code>sceKernelLoadModule</code></pre>
+        <p>This is intentionally not a regex engine and does not guess encodings other than UTF-8.</p>
+
+        <h3>Hex search</h3>
+        <p>Hex mode searches exact bytes. Spaces and letter case in the query are ignored:</p>
+        <pre><code>DE AD BE EF
+
+DEADBEEF</code></pre>
+        <p>Both forms search the same four bytes. Wildcards such as <code>DE ?? BE ??</code> are not part of the wrapper search; that belongs in a specialized pattern-scanning tool.</p>
+
+        <h3>Large files and Deferred results</h3>
+        <p>The Studio never loads every project file into RAM at once just to search it. Content scanning runs in a Web Worker and reads files in chunks.</p>
+        <ul>
+          <li>Files up to <strong>32 MiB each</strong> are eligible for automatic content scanning.</li>
+          <li>Automatic scanning stops after an aggregate budget of <strong>256 MiB</strong> for one search.</li>
+          <li>Remaining files appear under <strong>Deferred</strong>.</li>
+          <li>You can scan one deferred file or choose <strong>Scan all</strong>.</li>
+        </ul>
+        <p>Deferred does not mean unsupported; it means the Studio is waiting for explicit permission before spending more time reading large data.</p>
+
+        <h3>Results and offsets</h3>
+        <p>Content results show byte offsets such as <code>0x00032A10</code>. Clicking a result opens the file normally. The wrapper intentionally does not expose a cross-tool <code>gotoOffset()</code> API, so the result does not force a particular editor to navigate internally.</p>
+        <p>Search result counts are bounded to keep the UI responsive: filename results are capped at 1,000 and content results at 2,000 overall (with bounded per-file results). Refine the query when a cap is reached.</p>
+
+        <div class="help-callout"><strong>Search does not recursively parse formats.</strong> If <code>game.iso</code> is one file in the project, wrapper Search sees one binary Blob. Searching the ISO filesystem belongs to an ISO-aware tool.</div>
+      </section>
+
+      <section id="tool-library">
+        <h2>7. Tool Library</h2>
+        <p>Tool Library lists tools that are already bundled with the deployed Studio. It is a catalog and workspace-customization surface, <strong>not a package manager</strong>: Pin/Unpin does not download or install code.</p>
+
+        <h3>Core tools</h3>
+        <p>A Core badge means the tool is part of the baseline catalog and always available to the Studio. Core status is independent from pinning: a core tool can still be pinned to the activity rail for convenience.</p>
+
+        <h3>Pinning</h3>
+        <p>Pinning is explicit and workspace-specific. A pinned tool receives a persistent icon in that project's activity rail. Unpinning removes the shortcut but does not make the tool unavailable from Tool Library or Open With.</p>
+        <p>Pins are saved inside <code>.pspstudio</code>, so different projects can expose different tool shortcuts.</p>
+      </section>
+
+      <section id="open-with">
+        <h2>8. Opening files and Open With</h2>
+        <p>Each tool declares which filenames it can accept. When you open a project file, the Studio asks the Tool Registry for compatible handlers.</p>
+
+        <h3>Automatic opening</h3>
+        <ul>
+          <li>If a saved compatible association exists, the Studio uses it.</li>
+          <li>If exactly one tool is compatible, it opens directly.</li>
+          <li>Otherwise the Open With chooser appears.</li>
+        </ul>
+
+        <h3>Open With ranking</h3>
+        <p>Compatible tools are grouped in this order:</p>
+        <ol>
+          <li><strong>Pinned</strong> - tools explicitly pinned to this project.</li>
+          <li><strong>Suggested</strong> - tools previously chosen successfully through Open With in this project.</li>
+          <li><strong>Core</strong> - other compatible baseline tools.</li>
+          <li><strong>Other compatible tools</strong>.</li>
+        </ol>
+        <p>A suggestion is not a pin and does not create a rail icon. Suggestions are simply workspace-local ranking hints.</p>
+
+        <h3>Always use</h3>
+        <p>Open With can remember a default association. Depending on the file, the association may target an extension such as <code>.bin</code> or an exact filename such as <code>EBOOT.BIN</code>. Associations are stored in the current project.</p>
+        <p>The choice is committed only after the selected tool successfully opens the file. A broken tool cannot leave behind a successful-looking suggestion or association.</p>
+
+        <h3>Force the chooser</h3>
+        <p>Use <strong>Open With...</strong> from the context menu or press <kbd>Shift</kbd>+<kbd>Enter</kbd> on a selected file even if a default handler already exists.</p>
+      </section>
+
+      <section id="transfers">
+        <h2>9. Moving data between project and tools</h2>
+        <p>The Studio does not require tools to import ProjectStore APIs. Transfers use normal drag-and-drop plus a very small semantic contract.</p>
+
+        <h3>Project -> Tool</h3>
+        <p>A project file can be dragged onto a tool element that accepts a file or folder drop. The wrapper converts the file into the target iframe's JavaScript realm before handing it to the tool.</p>
+
+        <h3>Tool -> Project</h3>
+        <p>A tool can expose a semantic file or folder resource. The wrapper makes it draggable automatically. Drop it anywhere in Project Explorer and the Studio materializes it into the workspace.</p>
+
+        <h3>Tool -> Tool</h3>
+        <p>Tool-to-tool drag is supported for <strong>file resources</strong> when the destination implements the corresponding drop method. Folder transfers between tools intentionally go through Project Explorer so that tree reconstruction has a single owner.</p>
+
+        <h3>No programmatic cross-tool launcher</h3>
+        <p>Tool API v1 intentionally has no method such as <code>studio.openWith('some-tool')</code>. A tool should not know the IDs or routing rules of other tools. Users can route data through Project Explorer, Open With or direct file drag. A new cross-tool capability should only be standardized if multiple real tools prove that the same interaction cannot be expressed cleanly through the existing model.</p>
+      </section>
+
+      <section id="shortcuts">
+        <h2>10. Keyboard shortcuts</h2>
+        <p><code>Ctrl</code> below means <code>⌘</code> on macOS where the Studio uses the platform Mod key.</p>
+        <div class="help-table-wrap">
+          <table class="help-table">
+            <thead><tr><th>Shortcut</th><th>Scope</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>N</kbd></td><td>Studio</td><td>New project</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Studio</td><td>Open project</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Studio</td><td>Save project</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>Studio</td><td>Toggle the Explorer/Search sidebar</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>Studio</td><td>Open workspace Search</td></tr>
+              <tr><td><kbd>Enter</kbd></td><td>Explorer</td><td>Open file or expand/collapse folder</td></tr>
+              <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td>Explorer</td><td>Open With...</td></tr>
+              <tr><td><kbd>F2</kbd></td><td>Explorer</td><td>Rename selected node</td></tr>
+              <tr><td><kbd>Delete</kbd></td><td>Explorer</td><td>Delete selected node</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>Explorer</td><td>Copy selected node</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Explorer</td><td>Paste into selected folder/parent</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>N</kbd></td><td>Explorer</td><td>New folder</td></tr>
+              <tr><td><kbd>^</kbd>/<kbd>v</kbd></td><td>Explorer</td><td>Move selection</td></tr>
+              <tr><td><kbd><-</kbd>/<kbd>-></kbd></td><td>Explorer</td><td>Collapse/expand or navigate to parent</td></tr>
+              <tr><td><kbd>Shift</kbd>+<kbd>F10</kbd></td><td>Explorer</td><td>Open context menu</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Tool shortcuts belong to the tool iframe. Explorer shortcuts only run while Explorer has focus, and parent-shell shortcuts are not forwarded into a focused tool iframe. Tool authors are therefore free to implement ordinary editor shortcuts inside their own pages.</p>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>11. Troubleshooting</h2>
+
+        <details open>
+          <summary>A file does not open</summary>
+          <p>The most common cause is that no catalog tool declares support for its filename. Use Open With to verify available handlers. If the Tool Registry itself failed, the Studio reports it with a toast while project features remain available.</p>
+        </details>
+        <details>
+          <summary>A tool is available but does not appear in the activity rail</summary>
+          <p>The rail only shows tools explicitly pinned for the current project. Open Tool Library and choose <strong>Pin</strong>. Saving the project persists that pin.</p>
+        </details>
+        <details>
+          <summary>Search leaves a file under Deferred</summary>
+          <p>This is expected for large files or after the automatic scan budget is exhausted. Click <strong>Scan</strong> on that file or <strong>Scan all</strong>.</p>
+        </details>
+        <details>
+          <summary>Search results disappear after editing project files</summary>
+          <p>Search results are tied to a project revision. When file contents or tree structure changes, previous content results become stale and the Studio asks you to run the search again.</p>
+        </details>
+        <details>
+          <summary>The project still shows an asterisk after Save</summary>
+          <p>If the project changed while the save snapshot was being generated, the file on disk is valid but does not include that later change. Save again to capture the newest revision.</p>
+        </details>
+        <details>
+          <summary>Closing the project or browser asks for confirmation</summary>
+          <p>The project has unsaved workspace changes, a tool has declared unsaved internal state, or both. Project changes and tool dirty state are tracked independently.</p>
+        </details>
+        <details>
+          <summary>The application does not work when opening index.html directly from disk</summary>
+          <p>PSP Modding Studio uses ES modules, fetch, workers and same-origin iframe hosting. Serve the directory over HTTP/HTTPS instead of using <code>file://</code>. For local development, for example:</p>
+          <pre><code>python3 -m http.server 8080</code></pre>
+          <p>Then open <code>http://localhost:8080/</code>.</p>
+        </details>
+      </section>
+
+      <section id="limits">
+        <h2>12. Safety limits and architectural boundaries</h2>
+        <p>The wrapper uses explicit limits so malformed projects or tools fail instead of consuming unbounded memory/time. These are safety boundaries, not recommended project targets.</p>
+        <div class="help-table-wrap">
+          <table class="help-table compact">
+            <thead><tr><th>Area</th><th>Current bound</th></tr></thead>
+            <tbody>
+              <tr><td>Project entries</td><td>50,000 files/folders</td></tr>
+              <tr><td>Project nesting</td><td>128 levels</td></tr>
+              <tr><td>Single project file</td><td>512 MiB</td></tr>
+              <tr><td>Total inflated project archive</td><td>1 GiB safety envelope</td></tr>
+              <tr><td>Saved tool tabs</td><td>256</td></tr>
+              <tr><td>Pinned tools</td><td>256</td></tr>
+              <tr><td>Suggested tools</td><td>32</td></tr>
+              <tr><td>File associations</td><td>1,024</td></tr>
+              <tr><td>Catalog tools</td><td>256</td></tr>
+              <tr><td>Tool iframe load</td><td>15 s</td></tr>
+              <tr><td>Tool API call</td><td>60 s</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Trusted tool model</h3>
+        <p>Tools are hosted in same-origin iframes. This gives each tab separate DOM, CSS, JavaScript globals and lifecycle, but it is <strong>not a security sandbox against intentionally malicious code</strong>. Bundled tools are trusted application code.</p>
+        <p>An ecosystem for untrusted remote plugins would need a different architecture: sandboxed/cross-origin iframes and a message-based capability protocol. Tool API v1 is intentionally not designed for that use case.</p>
+      </section>
+
+      <div class="help-section-break" id="developer-guide">
+        <div class="help-kicker">Developer documentation</div>
+        <h2>Creating Tools (plugins)</h2>
+        <p>A Tool is the PSP Modding Studio equivalent of a plugin. It is intentionally just a normal web page plus a small metadata file. You do not inherit a framework class, mount into the Studio DOM or import ProjectStore internals.</p>
+      </div>
+
+      <section id="tool-anatomy">
+        <h2>13. Tool anatomy</h2>
+        <p>The minimum tool is:</p>
+        <pre><code>tools/my-tool/
+|--- tool.json
+`--- index.html</code></pre>
+        <p>Everything else is optional:</p>
+        <pre><code>tools/my-tool/
+|--- tool.json
+|--- index.html
+|--- tool.js
+|--- style.css
+|--- icon.svg
+|--- workers/
+`--- vendor/</code></pre>
+        <p>The directory name is the <strong>tool ID</strong>. Prefer lowercase IDs such as <code>sfo-studio</code>, <code>texture-editor</code> or <code>game-script-tool</code>. A tool ID may contain letters, digits, dots, underscores and hyphens, must not contain path separators, and is limited by the Registry.</p>
+
+        <h3>Tools are standalone pages</h3>
+        <p><code>index.html</code> should remain usable as a normal page while developing the tool. When hosted by PSP Modding Studio it is loaded in its own same-origin iframe. The Studio sets these attributes on the tool document:</p>
+        <pre><code>document.documentElement.dataset.theme === "dark"
+document.documentElement.dataset.studioHosted === "true"</code></pre>
+        <p>A tool may use them for minor presentation adjustments, but should not depend on wrapper CSS classes or DOM structure.</p>
+
+        <h3>Static paths and subdirectory hosting</h3>
+        <p>Write tool asset URLs so the tool works when PSP Modding Studio is deployed below a site subdirectory (for example GitHub Pages). Prefer paths relative to the file that owns the reference:</p>
+        <pre><code>&lt;link rel="stylesheet" href="./style.css"&gt;
+&lt;script type="module" src="./tool.js"&gt;&lt;/script&gt;
+&lt;img src="./assets/preview.svg" alt=""&gt;</code></pre>
+        <p>Inside CSS, remember that <code>url(...)</code> is resolved relative to the <strong>stylesheet</strong>, not the HTML document. Avoid root-absolute paths such as <code>/assets/...</code> unless the deployment explicitly guarantees a domain root. A tool's own icon path in <code>tool.json</code> is resolved relative to the tool folder.</p>
+
+        <h3>Project file icons are not tool metadata</h3>
+        <p>The icon shown beside a project file in Explorer is chosen by the Studio from the filename/extension. A tool should not register project-file icon mappings. The <code>icon</code> field in <code>tool.json</code> represents the tool itself in Tool Library, tabs and the activity rail.</p>
+      </section>
+
+      <section id="manifest">
+        <h2>14. <code>tool.json</code></h2>
+        <p>The manifest lets the Registry discover and validate a tool <strong>without executing tool code</strong>.</p>
+        <pre><code>{
+  "api": 1,
+  "name": "My Tool",
+  "subtitle": "Optional short subtitle",
+  "description": "What the tool does.",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": [".bin", "EBOOT.BIN"],
+  "keywords": ["binary", "psp", "editor"]
+}</code></pre>
+
+        <div class="help-table-wrap">
+          <table class="help-table">
+            <thead><tr><th>Field</th><th>Required</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>api</code></td><td>Yes</td><td>Tool API version. Current value must be <code>1</code>.</td></tr>
+              <tr><td><code>name</code></td><td>Yes</td><td>Human-readable tool name.</td></tr>
+              <tr><td><code>subtitle</code></td><td>No</td><td>Short secondary label.</td></tr>
+              <tr><td><code>description</code></td><td>Yes</td><td>Description shown in Tool Library/Open With.</td></tr>
+              <tr><td><code>author</code></td><td>Yes</td><td>Author or maintainer display name.</td></tr>
+              <tr><td><code>version</code></td><td>Yes</td><td>Tool version; independent from Studio version.</td></tr>
+              <tr><td><code>icon</code></td><td>No</td><td>Relative path to the tool icon. A default icon is used when omitted.</td></tr>
+              <tr><td><code>accepts</code></td><td>No</td><td>Filename rules used by Open With.</td></tr>
+              <tr><td><code>keywords</code></td><td>No</td><td>Additional Tool Library search terms.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><code>accepts</code> rules</h3>
+        <p>Compatibility rules are case-insensitive and may be:</p>
+        <ul>
+          <li><code>.sfo</code> - any filename ending in that extension.</li>
+          <li><code>EBOOT.BIN</code> - exact filename.</li>
+          <li><code>*</code> - every filename.</li>
+        </ul>
+        <p>Do not put MIME types, paths or regular expressions in <code>accepts</code>. If a tool can only make a final decision after parsing the file, declare the narrowest useful filename rule and validate the content inside <code>open(file)</code>.</p>
+
+        <h3>Icon rules</h3>
+        <p><code>icon</code> must be relative to the tool folder. Absolute URLs, <code>..</code> escapes and paths that leave the tool directory are rejected. Example:</p>
+        <pre><code>"icon": "assets/icon.svg"</code></pre>
+      </section>
+
+      <section id="catalog">
+        <h2>15. Registering a tool</h2>
+        <p>Adding files under <code>tools/</code> is not enough. Register the directory name in <code>tools/catalog.json</code>:</p>
+        <pre><code>{
+  "core": [
+    "umd-forge",
+    "sfo-studio"
+  ],
+  "tools": [
+    "my-tool"
+  ]
+}</code></pre>
+
+        <h3>Core vs regular catalog tools</h3>
+        <ul>
+          <li><strong>core</strong> - baseline tool shipped as a permanent part of the Studio distribution.</li>
+          <li><strong>tools</strong> - normal bundled catalog entry.</li>
+        </ul>
+        <p>Core status is a catalog concern, not a manifest field. A Tool must never declare itself pinned, suggested, associated or core inside <code>tool.json</code>. Those are Studio/workspace decisions.</p>
+        <p>The Registry loads manifests independently. If one tool is malformed or its page is missing, that tool is isolated while valid sibling tools remain available.</p>
+      </section>
+
+      <section id="tool-api">
+        <h2>16. Tool API v1</h2>
+        <p>A hosted tool may expose a global <code>window.tool</code> object containing any relevant subset of four methods:</p>
+        <pre><code>window.tool = {
+  open(file) {},
+  get(id) {},
+  replace(id, file) {},
+  add(id, files) {}
+};</code></pre>
+        <p>The API is intentionally tiny. Do not import Studio classes to compensate for missing convenience methods.</p>
+
+        <h3><code>open(file)</code></h3>
+        <p>Called when the Studio opens a project file with the tool. The argument is a real <code>File</code> created in the tool iframe's JavaScript realm.</p>
+        <pre><code>window.tool = {
+  async open(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    loadDocument(bytes, file.name);
+  }
+};</code></pre>
+        <p>If a file is opened through Open With, the selected tool <strong>must</strong> implement <code>open(file)</code>. A tool that does not accept project files may omit it.</p>
+
+        <h3><code>get(id)</code></h3>
+        <p>Called when a semantic <code>data-file</code> or <code>data-folder</code> resource is dragged out of the tool. The <code>id</code> is the exact opaque string declared by the tool in HTML.</p>
+        <p>For a file, return a <code>File</code> when possible; a real <code>Blob</code> is also accepted:</p>
+        <pre><code>get(id) {
+  if (id !== 'output.bin') return;
+  return new File([buildBytes()], 'output.bin', {
+    type: 'application/octet-stream'
+  });
+}</code></pre>
+
+        <h3><code>replace(id, file)</code></h3>
+        <p>If this method exists, every valid <code>data-file</code> element becomes a drop target. Exactly one incoming file is accepted.</p>
+        <pre><code>async replace(id, file) {
+  if (id !== 'preview.png') return;
+  await loadReplacement(file);
+}</code></pre>
+
+        <h3><code>add(id, files)</code></h3>
+        <p>If this method exists, every valid <code>data-folder</code> element becomes a multi-file drop target.</p>
+        <pre><code>async add(id, files) {
+  if (id !== 'assets') return;
+  for (const file of files) await importAsset(file);
+}</code></pre>
+
+        <h3>Call behavior</h3>
+        <p>Tool API calls may be synchronous or return Promises. The wrapper places a time bound around hosted calls. Current Tool API calls have a 60-second wrapper timeout, so long operations should be structured so they do not depend on an indefinitely pending single call.</p>
+        <p>Throw normal <code>Error</code> objects with useful messages when an operation cannot continue. The wrapper catches and attributes tool errors to the tool/method instead of leaving partial wrapper state behind.</p>
+      </section>
+
+      <section id="semantic-resources">
+        <h2>17. Semantic file and folder resources</h2>
+        <p>Tools do not register drag handlers with the Studio. They mark ordinary HTML elements with one semantic attribute:</p>
+        <pre><code>&lt;div data-file="output.bin"&gt;Drag output.bin&lt;/div&gt;
+&lt;div data-folder="export"&gt;Drag export folder&lt;/div&gt;</code></pre>
+        <p>A semantic element must declare <strong>exactly one</strong> of <code>data-file</code> or <code>data-folder</code>. Values are opaque IDs owned by the tool.</p>
+
+        <h3>File export</h3>
+        <pre><code>&lt;button data-file="patched-eboot.bin"&gt;
+  Drag patched EBOOT
+&lt;/button&gt;
+
+&lt;script&gt;
+window.tool = {
+  get(id) {
+    if (id === 'patched-eboot.bin') {
+      return new File([patchedBytes], 'EBOOT.BIN');
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+        <p>When <code>get</code> exists, the wrapper makes the semantic element draggable automatically.</p>
+
+        <h3>Folder export</h3>
+        <p>A folder resource returns an object exposing <code>files</code>. Every entry contains a POSIX-relative path and a File/Blob:</p>
+        <pre><code>get(id) {
+  if (id !== 'export') return;
+  return {
+    files: [
+      { path: 'manifest.txt', file: manifestFile },
+      { path: 'assets/icon.png', file: iconFile },
+      { path: 'assets/menu/background.png', file: backgroundFile }
+    ]
+  };
+}</code></pre>
+        <p>Paths must be relative and use forward slashes. These are invalid:</p>
+        <pre><code>/absolute/file.bin
+../escape.bin
+folder\windows-path.bin</code></pre>
+
+        <h3>Lazy folder generation</h3>
+        <p>For large exports, <code>files</code> may be a function that returns an iterable or async iterable:</p>
+        <pre><code>get(id) {
+  if (id !== 'export') return;
+  return {
+    files: async function* () {
+      for (const asset of model.assets) {
+        yield {
+          path: `assets/${asset.name}`,
+          file: await buildAsset(asset)
+        };
+      }
+    }
+  };
+}</code></pre>
+        <p>The transfer remains owned by the source and destination lifecycles until the consumer has finished materializing the resource. Closing either side cancels the transfer.</p>
+        <p>Folder transfers are bounded by the wrapper (including path/depth/node/file limits and a total transfer deadline). Treat these limits as failure containment, not as a target batch size; very large transformations are usually easier to debug when exported in deliberate groups.</p>
+
+        <h3>Dynamic semantic elements</h3>
+        <p>The host observes the tool DOM. You may add, remove or change <code>data-file</code>/<code>data-folder</code> elements after load; the wrapper updates drag eligibility automatically.</p>
+      </section>
+
+      <section id="studio-bridge">
+        <h2>18. Optional <code>window.studio</code> presentation bridge</h2>
+        <p>After the iframe finishes loading, the wrapper injects a reserved read-only <code>window.studio</code> object:</p>
+        <pre><code>studio.toast('Export complete', 'success');
+await studio.confirm('Discard changes?');
+studio.dirty(true);
+studio.title('EBOOT.BIN - My Tool');</code></pre>
+
+        <div class="help-table-wrap">
+          <table class="help-table">
+            <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>toast(message, type, duration)</code></td><td>Shows a Studio notification. Types: <code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>.</td></tr>
+              <tr><td><code>confirm(message)</code></td><td>Asks for confirmation and resolves to a boolean.</td></tr>
+              <tr><td><code>dirty(value)</code></td><td>Marks/unmarks the tool tab as internally dirty.</td></tr>
+              <tr><td><code>title(value)</code></td><td>Updates the tool tab title.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Bridge readiness</h3>
+        <p>A standalone tool page does not have <code>window.studio</code>. Even when hosted, very early top-level script may run before the bridge is injected. Use optional access or listen for <code>studio-ready</code>:</p>
+        <pre><code>function studioReady(callback) {
+  if (window.studio) callback(window.studio);
+  else window.addEventListener('studio-ready', () => callback(window.studio), { once: true });
+}</code></pre>
+        <p><code>window.studio</code> is reserved. A tool must not predefine, replace or mutate it.</p>
+        <p>The bridge is presentation-only. It deliberately does not expose ProjectStore, tabs, Registry, Open With or other tools.</p>
+      </section>
+
+      <section id="developer-lifecycle">
+        <h2>19. Lifecycle, isolation and error handling</h2>
+
+        <h3>One iframe per tab</h3>
+        <p>Every tool tab gets a separate same-origin iframe. Two tabs of the same tool therefore have independent DOM, globals and in-memory state without a custom instance-management API.</p>
+        <ul>
+          <li>Switch tab -> iframe remains alive.</li>
+          <li>Close tab -> iframe is destroyed and its wrapper-owned transfers are cancelled.</li>
+          <li>Change project -> old tool hosts and outstanding transfers are torn down.</li>
+        </ul>
+
+        <h3>Keep standalone compatibility</h3>
+        <p>A strong tool can run at <code>tools/my-tool/index.html</code> without the Studio. Treat <code>window.studio</code> as optional and keep all actual editor logic inside the tool.</p>
+
+        <h3>Do not depend on shell internals</h3>
+        <p>Never import files such as:</p>
+        <pre><code>js/core/project-store.js
+js/core/module-host.js
+js/core/transfer-registry.js
+js/core/tab-manager.js
+js/core/shortcut-manager.js</code></pre>
+        <p>Those are implementation details, not plugin APIs. A tool that imports them is coupled to the wrapper and can break during harmless internal refactors.</p>
+
+        <h3>Do not talk directly to other tools</h3>
+        <p>Do not hard-code another tool's directory/ID or access another tool iframe. Tool API v1 has no programmatic cross-tool <code>open</code> function by design. Exchange user-visible files through semantic resources, Project Explorer and Open With.</p>
+
+        <h3>Errors should be local and descriptive</h3>
+        <p>If the input file is invalid, reject it in the tool:</p>
+        <pre><code>async open(file) {
+  const header = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+  if (!isExpectedHeader(header)) {
+    throw new Error(`${file.name} is not a supported MyFormat file.`);
+  }
+  // Continue only after validation.
+}</code></pre>
+        <p>The wrapper contains the failed tab opening and reports the tool/method that failed. Do not catch an unrecoverable error merely to leave a half-initialized editor visible.</p>
+
+        <h3>Dirty state</h3>
+        <p>Use <code>studio.dirty(true)</code> when the tool contains changes the user could lose by closing the tab. Set it back to <code>false</code> once those changes have been committed/exported according to the tool's own workflow.</p>
+        <p>Do not use tab dirty state as a substitute for writing changed files into ProjectStore. The tool and project have deliberately separate dirty states.</p>
+
+        <h3>Performance</h3>
+        <ul>
+          <li>Do not parse large files repeatedly on every UI render.</li>
+          <li>Use workers for expensive CPU-bound transformations where practical.</li>
+          <li>Use lazy folder iterators when exporting many generated files.</li>
+          <li>Avoid huge base64 strings; use Blob/File/ArrayBuffer-oriented APIs.</li>
+          <li>Keep Tool API methods bounded and cancellable internally where possible.</li>
+        </ul>
+
+        <h3>Security model</h3>
+        <p>Bundled tools are trusted same-origin application code. Do not add unreviewed hostile third-party code and assume the iframe protects the parent. It does not. The iframe is an operational UI/lifecycle boundary, not a hostile-code security boundary.</p>
+      </section>
+
+      <section id="developer-example">
+        <h2>20. Complete minimal editable-file Tool</h2>
+        <p>This example opens text files, lets the user edit them, marks the tab dirty and exposes the current file as a draggable resource.</p>
+
+        <h3>Directory</h3>
+        <pre><code>tools/simple-text/
+|--- tool.json
+|--- index.html
+|--- tool.js
+|--- style.css
+`--- icon.svg</code></pre>
+
+        <h3><code>tool.json</code></h3>
+        <pre><code>{
+  "api": 1,
+  "name": "Simple Text",
+  "description": "Minimal text editor example for PSP Modding Studio.",
+  "author": "Example Author",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": [".txt", ".ini", ".cfg"],
+  "keywords": ["text", "editor"]
+}</code></pre>
+
+        <h3><code>index.html</code></h3>
+        <pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Simple Text&lt;/title&gt;
+  &lt;link rel="stylesheet" href="./style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;strong id="name"&gt;No file&lt;/strong&gt;
+    &lt;div id="export" data-file="document.txt"&gt;Drag to Project Explorer&lt;/div&gt;
+  &lt;/header&gt;
+  &lt;textarea id="editor" spellcheck="false"&gt;&lt;/textarea&gt;
+  &lt;script type="module" src="./tool.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3><code>tool.js</code></h3>
+        <pre><code>const editor = document.querySelector('#editor');
+const nameLabel = document.querySelector('#name');
+const exportTile = document.querySelector('#export');
+
+let fileName = 'document.txt';
+
+function updateStudioDirty(value) {
+  window.studio?.dirty(value);
+}
+
+function updateTitle() {
+  nameLabel.textContent = fileName;
+  window.studio?.title(`${fileName} - Simple Text`);
+}
+
+async function loadFile(file) {
+  fileName = file.name || 'document.txt';
+  editor.value = await file.text();
+  // The resource ID is opaque. Using the filename makes the drag label useful.
+  exportTile.dataset.file = fileName;
+  updateTitle();
+  updateStudioDirty(false);
+}
+
+editor.addEventListener('input', () =&gt; updateStudioDirty(true));
+
+window.tool = Object.freeze({
+  async open(file) {
+    await loadFile(file);
+  },
+
+  get(id) {
+    if (id !== fileName) return;
+    return new File([editor.value], fileName, { type: 'text/plain' });
+  },
+
+  async replace(id, file) {
+    if (id !== fileName) return;
+    await loadFile(file);
+  }
+});
+
+window.addEventListener('studio-ready', () =&gt; updateTitle(), { once: true });</code></pre>
+
+        <h3><code>style.css</code></h3>
+        <pre><code>:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #1e1e1e;
+  color: #ddd;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 40px 1fr;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-bottom: 1px solid #333;
+}
+
+#export {
+  padding: 5px 8px;
+  border: 1px solid #555;
+  cursor: grab;
+}
+
+textarea {
+  min-width: 0;
+  min-height: 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  padding: 12px;
+  background: #181818;
+  color: inherit;
+  font: 13px/1.5 ui-monospace, monospace;
+}</code></pre>
+
+        <h3>Register it</h3>
+        <pre><code>{
+  "core": ["umd-forge", "sfo-studio", "image-studio"],
+  "tools": ["simple-text"]
+}</code></pre>
+        <p>Reload the Studio. The tool now appears in Tool Library and becomes an Open With candidate for <code>.txt</code>, <code>.ini</code> and <code>.cfg</code> files.</p>
+      </section>
+
+      <section id="developer-checklist">
+        <h2>21. Tool release checklist</h2>
+        <p>Before adding a tool to the shared catalog, verify the following:</p>
+        <ul class="checklist">
+          <li><code>tool.json</code> is valid JSON and uses <code>"api": 1</code>.</li>
+          <li>The tool folder ID matches the entry in <code>tools/catalog.json</code>.</li>
+          <li><code>index.html</code> loads without redirects or missing local assets.</li>
+          <li>The tool also loads standalone without assuming <code>window.studio</code> exists.</li>
+          <li><code>accepts</code> is narrow enough to avoid claiming unrelated files.</li>
+          <li><code>open(file)</code> validates file content before committing editor state.</li>
+          <li>Every exposed <code>window.tool</code> member is actually a function.</li>
+          <li><code>data-file</code>/<code>data-folder</code> elements declare exactly one resource type.</li>
+          <li><code>get(id)</code> returns real File/Blob values, not file-like plain objects.</li>
+          <li>Folder export paths are relative POSIX paths without <code>..</code>.</li>
+          <li><code>replace</code> and <code>add</code> update only the resource identified by the supplied ID.</li>
+          <li>Tool dirty state is reported with <code>studio.dirty()</code> when data can be lost.</li>
+          <li>Opening two instances of the same tool does not share accidental global state.</li>
+          <li>Closing a tab during pending asynchronous work does not leave required global side effects behind.</li>
+          <li>Large operations do not block the main thread unnecessarily.</li>
+          <li>The tool does not import wrapper internals or hard-code another tool's ID.</li>
+          <li>The icon is local to the tool folder and all static paths work when hosted from a subdirectory.</li>
+        </ul>
+      </section>
+
+      <section id="developer-reference">
+        <h2>22. Developer reference summary</h2>
+        <pre><code>Tool directory ID
+    v
+tools/&lt;id&gt;/tool.json     metadata + accepts rules
+    v
+tools/&lt;id&gt;/index.html   standalone tool page
+    v
+window.tool              optional data API
+    v
+data-file/data-folder    semantic drag/drop resources
+    v
+window.studio            optional presentation bridge</code></pre>
+
+        <div class="help-callout important"><strong>Stable contract:</strong> Tool API v1 is intentionally frozen around <code>open</code>, <code>get</code>, <code>replace</code> and <code>add</code>. A new method should not be added for a theoretical convenience or one tool's private workflow. The wrapper should stay generic; specialized behavior belongs inside the tool.</div>
+      </section>
+
+      <footer class="help-footer">
+        <span>PSP Modding Studio v0.14.3</span>
+        <span>Platform &amp; Tool API documentation</span>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

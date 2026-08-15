@@ -1,0 +1,9 @@
+{
+  "api": 1,
+  "name": "Example Tool",
+  "description": "One sentence describing what the tool does.",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": [".example"]
+}
