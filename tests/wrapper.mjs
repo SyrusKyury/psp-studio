@@ -18,6 +18,13 @@ async function rejects(fn, pattern, message) {
   throw new Error(`${message}: expected rejection`);
 }
 
+// New workspaces expose the primary disc tool immediately without mutating loaded project preferences.
+const defaultProject = ProjectStore.createNew('Default Tools');
+assert(defaultProject.workspace.pinnedTools.join(',') === 'umd-forge', 'New projects no longer pin UMD Forge by default');
+assert(defaultProject.dirty === false, 'Default new-project pin incorrectly marks a fresh project dirty');
+const plainProject = new ProjectStore('Loaded-style Project');
+assert(plainProject.workspace.pinnedTools.length === 0, 'Base ProjectStore unexpectedly injects defaults into loaded/legacy workspace state');
+
 // ProjectStore must never persist traversal/control path segments.
 const safeProject = new ProjectStore('Core Baseline');
 const strange = safeProject.createFolder('/', '..');
@@ -147,7 +154,7 @@ for (const relative of ['../preview.html', '../js/core/event-bus.js', '../js/cor
 const app = await readFile(new URL('../js/app.js', import.meta.url), 'utf8');
 const host = await readFile(new URL('../js/core/module-host.js', import.meta.url), 'utf8');
 const tabs = await readFile(new URL('../js/core/tab-manager.js', import.meta.url), 'utf8');
-assert(app.includes("const VERSION = '0.14.3'"), 'Core baseline version mismatch');
+assert(app.includes("const VERSION = '0.14.5'"), 'Core baseline version mismatch');
 assert(host.includes('TOOL_LOAD_TIMEOUT_MS'), 'Tool iframe load timeout missing');
 assert(tabs.includes('catch (error)') && tabs.includes('panel.remove()'), 'Transactional tab cleanup missing');
 

@@ -13,6 +13,18 @@ Relevant upstream documentation:
 
 The Photopea integration belongs entirely to the Image Studio tool and does not extend PSP Modding Studio Tool API v1.
 
+## EBOOT Decrypter / PSP KIRK WebAssembly
+
+`tools/eboot-decrypter/` uses the GPLv3 `psp-encryption-webassembly` KIRK/PRX implementation maintained by euan-forrester and derived from PPSSPP. The browser build is loaded from the copy used by `save-file-converter`, pinned to commit `98a7203ecc507e584eafc21cd48a6ea2b2e791b4`.
+
+The tool fetches only the JavaScript loader and WebAssembly engine. EBOOT/PRX file contents remain in the browser and are passed directly to the local WebAssembly instance. The dependency is loaded lazily only when an encrypted executable needs decryption.
+
+Relevant upstream projects:
+
+- `euan-forrester/psp-encryption-webassembly` - GPL-3.0
+- `euan-forrester/save-file-converter` - source of the pinned browser build
+- `hrydgard/PPSSPP` - upstream KIRK/PRX implementation used by the WebAssembly port
+
 ## Removed dormant prototypes
 
-`docs/HISTORY.md` may mention experimental PSP executable crypto/signing helpers that once lived under `shared/psp/crypto/`. They had no runtime consumer in the current Studio or bundled tools and were removed from the v0.12.2 baseline. If a future executable tool needs that functionality, it should introduce a reviewed dependency as part of that concrete tool rather than keeping unused implementation in the wrapper baseline.
+`docs/HISTORY.md` may mention experimental PSP executable crypto/signing helpers that once lived under `shared/psp/crypto/`. They had no runtime consumer and were removed from the v0.12.2 wrapper baseline. EBOOT Decrypter now owns its executable decryption dependency inside the tool boundary instead of reintroducing crypto code into the Studio core.

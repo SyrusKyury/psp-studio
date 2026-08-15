@@ -1,4 +1,4 @@
-import { safeText } from '../../shared/utils/format.js?v=0.14.3';
+import { safeText } from '../../shared/utils/format.js?v=0.14.5';
 const TOAST_TYPES = new Set(['info', 'success', 'error', 'warning']);
 const MAX_TOASTS = 8;
 

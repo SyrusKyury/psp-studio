@@ -1,0 +1,14 @@
+{
+  "api": 1,
+  "name": "Image Viewer",
+  "description": "Lightweight local image viewer for quick inspection before opening an image in a full editor.",
+  "author": "PSP Modding Studio",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": [
+    ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".bmp", ".avif", ".ico"
+  ],
+  "keywords": [
+    "image", "viewer", "preview", "picture", "png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "avif", "ico"
+  ]
+}

@@ -8,9 +8,9 @@
   <meta name="color-scheme" content="dark">
   <meta name="description" content="Complete user and developer documentation for PSP Modding Studio.">
   <title>PSP Modding Studio - Documentation</title>
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=0.14.3">
-  <link rel="stylesheet" href="./assets/css/base.css?v=0.14.3">
-  <link rel="stylesheet" href="./assets/css/help.css?v=0.14.3">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=0.14.5">
+  <link rel="stylesheet" href="./assets/css/base.css?v=0.14.5">
+  <link rel="stylesheet" href="./assets/css/help.css?v=0.14.5">
 </head>
 <body class="help-body">
   <header class="help-topbar">
@@ -51,7 +51,7 @@
 
     <main class="help-content">
       <header class="help-hero" id="overview">
-        <div class="help-kicker">PSP Modding Studio v0.14.3</div>
+        <div class="help-kicker">PSP Modding Studio v0.14.5</div>
         <h1>Platform documentation</h1>
         <p class="help-lead">PSP Modding Studio is a browser-based workspace for PSP modding. The Studio manages projects, files, tabs, search, tool discovery and data transfers. Individual editors live in independent <strong>Tools</strong> hosted by the Studio.</p>
         <div class="help-callout important"><strong>The central rule:</strong> the Studio owns the workspace; tools own editing. A tool should never need to know how the Project Explorer, tab system, Tool Library or project persistence are implemented.</div>
@@ -259,7 +259,7 @@ DEADBEEF</code></pre>
         <p>A Core badge means the tool is part of the baseline catalog and always available to the Studio. Core status is independent from pinning: a core tool can still be pinned to the activity rail for convenience.</p>
 
         <h3>Pinning</h3>
-        <p>Pinning is explicit and workspace-specific. A pinned tool receives a persistent icon in that project's activity rail. Unpinning removes the shortcut but does not make the tool unavailable from Tool Library or Open With.</p>
+        <p>Pinning is workspace-specific. New projects start with <strong>UMD Forge</strong> pinned because it is the primary disc-workspace tool; you can unpin it at any time. Any pinned tool receives a persistent icon in that project's activity rail. Unpinning removes the shortcut but does not make the tool unavailable from Tool Library or Open With.</p>
         <p>Pins are saved inside <code>.pspstudio</code>, so different projects can expose different tool shortcuts.</p>
       </section>
 
@@ -270,8 +270,10 @@ DEADBEEF</code></pre>
         <h3>Automatic opening</h3>
         <ul>
           <li>If a saved compatible association exists, the Studio uses it.</li>
-          <li>If exactly one tool is compatible, it opens directly.</li>
-          <li>Otherwise the Open With chooser appears.</li>
+          <li>Common browser-supported images open in <strong>Image Viewer</strong> by default. Use Open With when you want Image Studio or another compatible editor.</li>
+          <li>If exactly one format-specific tool is compatible, it opens directly.</li>
+          <li>If no format-specific tool exists, <strong>Hex Viewer</strong> is the generic fallback.</li>
+          <li>If several format-specific tools compete and no default is saved, the Open With chooser appears.</li>
         </ul>
 
         <h3>Open With ranking</h3>
@@ -882,7 +884,7 @@ window.studio            optional presentation bridge</code></pre>
       </section>
 
       <footer class="help-footer">
-        <span>PSP Modding Studio v0.14.3</span>
+        <span>PSP Modding Studio v0.14.5</span>
         <span>Platform &amp; Tool API documentation</span>
       </footer>
     </main>

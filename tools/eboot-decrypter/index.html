@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>EBOOT Decrypter</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="decrypt-tool">
+    <header class="decrypt-toolbar">
+      <button class="button" id="decrypt-open" type="button">Open EBOOT</button>
+      <button class="button primary" id="decrypt-run" type="button" disabled>Decrypt to ELF</button>
+      <div class="spacer"></div>
+      <div class="engine-state" id="engine-state" title="The KIRK engine loads only when an encrypted executable is decrypted.">
+        <span class="engine-dot" id="engine-dot"></span>
+        <span id="engine-label">Engine idle</span>
+      </div>
+      <input class="hidden" id="decrypt-input" type="file" accept=".bin,.prx,application/octet-stream">
+    </header>
+
+    <main class="decrypt-main">
+      <section class="decrypt-intro">
+        <div class="tool-mark" aria-hidden="true">ELF</div>
+        <div>
+          <div class="eyebrow">PSP executable utility</div>
+          <h1>EBOOT Decrypter</h1>
+          <p>Open an encrypted PSP executable, decrypt it locally, then drag the resulting ELF back into the Project Explorer.</p>
+        </div>
+      </section>
+
+      <section class="pipeline" aria-label="Decrypt pipeline">
+        <article class="file-card source-card" id="source-card" data-file="source">
+          <div class="card-topline">
+            <span class="card-kicker">Input</span>
+            <span class="format-badge" id="source-format">No file</span>
+          </div>
+          <div class="file-icon encrypted" aria-hidden="true">BIN</div>
+          <div class="file-info">
+            <strong id="source-name">Open or drop EBOOT.BIN</strong>
+            <span id="source-meta">Encrypted ~PSP executables and PRX files are supported.</span>
+          </div>
+          <div class="drop-note">Drop a Project Explorer file here</div>
+        </article>
+
+        <div class="pipeline-action" aria-hidden="true">
+          <span></span>
+          <b>DECRYPT</b>
+          <span></span>
+        </div>
+
+        <article class="file-card output-card unavailable" id="output-card">
+          <div class="card-topline">
+            <span class="card-kicker">Output</span>
+            <span class="format-badge" id="output-format">ELF</span>
+          </div>
+          <div class="file-icon elf" aria-hidden="true">ELF</div>
+          <div class="file-info">
+            <strong id="output-name">Waiting for decryption</strong>
+            <span id="output-meta">The verified ELF will appear here.</span>
+          </div>
+          <div class="drag-note" id="drag-note">Decrypt a file first</div>
+        </article>
+      </section>
+
+      <section class="details-panel">
+        <div class="details-head">
+          <div>
+            <h2>Executable details</h2>
+            <p>Header information is read from the selected file before decryption.</p>
+          </div>
+          <button class="button" id="decrypt-download" type="button" disabled>Download ELF</button>
+        </div>
+        <div class="details-grid">
+          <div><span>Module</span><strong id="detail-module">-</strong></div>
+          <div><span>PSP size</span><strong id="detail-psp-size">-</strong></div>
+          <div><span>ELF size</span><strong id="detail-elf-size">-</strong></div>
+          <div><span>Compression</span><strong id="detail-compression">-</strong></div>
+          <div><span>PRX tag</span><strong id="detail-tag">-</strong></div>
+          <div><span>Container</span><strong id="detail-container">-</strong></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="decrypt-statusbar">
+      <span id="decrypt-status">Ready. Open an EBOOT.BIN or drop one from the Project Explorer.</span>
+      <div class="spacer"></div>
+      <span>Client-side only</span>
+    </footer>
+  </div>
+  <script type="module" src="./tool.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { escapeHtml as esc } from '../../shared/utils/format.js?v=0.14.3';
+import { escapeHtml as esc } from '../../shared/utils/format.js?v=0.14.5';
 
 function groupHandlers(handlers, pinnedIds, suggestedIds) {
   const pinnedSet = new Set(pinnedIds);

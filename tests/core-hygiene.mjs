@@ -297,14 +297,14 @@ const cssUsage = [tokenCss, ...css, ...toolCss].join('\n');
 const declaredTokens = new Set([...tokenCss.matchAll(/--([\w-]+)\s*:/g)].map((match) => match[1]));
 for (const token of declaredTokens) assert(cssUsage.includes(`var(--${token})`), `Unused shared CSS token returned: --${token}`);
 
-// v0.14.3 shell reduction: wrapper UI contains only real responsibilities.
+// v0.14.5 shell reduction: wrapper UI contains only real responsibilities.
 const helpSource = await readFile(new URL('../help.html', import.meta.url), 'utf8');
 for (const stale of ['ide-toolbar', 'inspector-dock', 'studio-statusbar', 'sidebar-tools-list', 'theme-toggle', 'data-left-pane-content']) assert(!indexSource.includes(stale), `Removed shell surface returned: ${stale}`);
 for (const stale of ['inspectorSource', 'showTabInspector', 'showProjectNodeInspector', 'safeStorageGet', 'psp-studio-theme', 'switchLeftPane', 'toggleInspector']) assert(!appSource.includes(stale), `Removed shell state returned: ${stale}`);
 assert(!tabSource.includes('openWelcome') && !tabSource.includes("id = 'welcome'") && !css.join('\n').includes('studio-welcome'), 'Special Welcome tab returned');
 assert(indexSource.includes('id="activity-tools-list"') && appSource.includes('renderToolAccess()'), 'Pinned tools are no longer rendered in the activity rail');
 assert(indexSource.includes('href="./help.html"') && helpSource.includes('id="developer-guide"') && helpSource.includes('Tool API v1'), 'Help is not an independent static HTML page');
-assert(helpSource.includes('v0.14.3') && !helpSource.includes('v0.12.8') && [...helpSource.matchAll(/\?v=([^"']+)/g)].every((match) => match[1] === '0.14.3'), 'Standalone Help page is not release/cache coherent with the frozen wrapper');
+assert(helpSource.includes('v0.14.5') && !helpSource.includes('v0.12.8') && [...helpSource.matchAll(/\?v=([^"']+)/g)].every((match) => match[1] === '0.14.5'), 'Standalone Help page is not release/cache coherent with the frozen wrapper');
 assert(indexSource.includes('content="dark"') && !tokenCss.includes('[data-theme=') && !appSource.includes('dataset.theme'), 'Light-theme machinery returned to the wrapper');
 assert(!/data-menu-button|ide-menu-popup|ide-menubar/.test(indexSource) && !appSource.includes('closeIdeMenus'), 'Traditional top menus returned after the direct-action shell simplification');
 for (const command of ['new', 'open', 'save']) assert(indexSource.includes(`data-shell-command="${command}"`), `Direct top-bar project command missing: ${command}`);
@@ -349,7 +349,7 @@ assert(registrySource.includes('must be an array of strings') && registrySource.
 
 console.log('Core hygiene validation passed: reduced public surface, canonical catalog/tabs, delegated Explorer events, simplified helpers and dormant-code removal');
 
-// v0.14.3 lifecycle/security maintenance rules: prefer AbortSignal ownership,
+// v0.14.5 lifecycle/security maintenance rules: prefer AbortSignal ownership,
 // keep the wrapper document same-origin by policy, and keep historical notes consolidated.
 assert(!shortcutSource.includes('removeEventListener'), 'Shortcut binder regrew a manual listener-cleanup API instead of AbortSignal ownership');
 assert(appSource.includes('projectEventController') && appSource.includes("project.addEventListener(type, onProjectEvent, { signal: projectEventController.signal })") && !appSource.includes('projectEventCleanup'), 'Project event lifecycle returned to manual removeEventListener bookkeeping');

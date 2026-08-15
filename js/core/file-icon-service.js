@@ -1,4 +1,4 @@
-import { extensionOf } from './file-associations.js?v=0.14.3';
+import { extensionOf } from './file-associations.js?v=0.14.5';
 
 const ICON_BASE = new URL('../../assets/file-icons/', import.meta.url);
 

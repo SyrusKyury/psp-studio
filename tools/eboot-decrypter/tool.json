@@ -1,0 +1,24 @@
+{
+  "api": 1,
+  "name": "EBOOT Decrypter",
+  "description": "Decrypt PSP EBOOT/PRX executables into standard ELF files for editing and reverse-engineering tools.",
+  "author": "PSP Modding Studio",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": [
+    "EBOOT.BIN",
+    "BOOT.BIN",
+    ".prx"
+  ],
+  "keywords": [
+    "eboot",
+    "decrypt",
+    "decryption",
+    "elf",
+    "prx",
+    "kirk",
+    "executable",
+    "reverse engineering",
+    "psp"
+  ]
+}

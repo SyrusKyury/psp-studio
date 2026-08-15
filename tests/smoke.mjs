@@ -273,7 +273,7 @@ if (!imageToolHtml.includes('https://www.photopea.com#%7B%22environment%22%3A%7B
 if (imageToolHtml.includes('src="https://www.photopea.com/"')) throw new Error('Image Studio regressed to the Photopea marketing landing page');
 if (/window\.tool\s*=\s*Object\.freeze\([^)]*saveToOE/s.test(imageToolSource)) throw new Error('Photopea-specific API leaked into Tool API surface');
 const appV09 = await readFile(new URL('../js/app.js', import.meta.url), 'utf8');
-if (!appV09.includes("const VERSION = '0.14.3'")) throw new Error('Studio version was not updated to v0.14.3');
+if (!appV09.includes("const VERSION = '0.14.5'")) throw new Error('Studio version was not updated to v0.14.5');
 console.log('Smoke test passed: v0.9 SFO Studio + Image Studio use unchanged Tool API v1');
 
 // v0.14 final shell keeps only direct project actions + activity rail surfaces.

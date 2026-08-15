@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Hex Viewer</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="hex-tool">
+    <header class="hex-toolbar">
+      <button class="button" id="hex-open" type="button">Open file</button>
+      <div class="toolbar-separator"></div>
+      <label class="goto-label" for="hex-goto">Offset</label>
+      <input class="goto-input" id="hex-goto" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="0x00000000" disabled>
+      <button class="button" id="hex-go" type="button" disabled>Go</button>
+      <div class="spacer"></div>
+      <span class="mode-label">16 bytes / row</span>
+      <input class="hidden" id="hex-input" type="file">
+    </header>
+
+    <main class="hex-main" id="hex-drop" data-file="document">
+      <section class="empty-state" id="hex-empty">
+        <div class="empty-icon">HEX</div>
+        <h1>Hex Viewer</h1>
+        <p>Open any binary file or drop one here from the Project Explorer.</p>
+        <button class="button primary" id="hex-open-empty" type="button">Open file</button>
+      </section>
+
+      <section class="hex-editor hidden" id="hex-editor" aria-label="Hexadecimal file view">
+        <div class="hex-head" id="hex-head" aria-hidden="true"></div>
+        <div class="hex-scroll" id="hex-scroll" tabindex="0">
+          <div class="hex-spacer" id="hex-spacer"></div>
+          <div class="hex-window" id="hex-window"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="hex-statusbar">
+      <span id="hex-status">Ready</span>
+      <div class="spacer"></div>
+      <span id="hex-position">-</span>
+      <span class="status-separator"></span>
+      <span id="hex-size">-</span>
+    </footer>
+  </div>
+  <script type="module" src="./tool.js"></script>
+</body>
+</html>

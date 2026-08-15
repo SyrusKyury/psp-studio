@@ -1,4 +1,4 @@
-# Studio Core Baseline - v0.14.3
+# Studio Core Baseline - v0.14.5
 
 The Studio core is a small IDE-style wrapper around independent same-origin tools. Its job is project persistence, navigation, lifecycle, transfer mediation and failure containment. Tool-specific behavior belongs to tools.
 
@@ -76,11 +76,12 @@ The optional presentation bridge remains limited to `toast`, `confirm`, `dirty` 
 
 - dark-only wrapper; no theme toggle or light-theme state;
 - direct project-action top bar + activity rail + Project Explorer/Search + document tabs/tool host;
-- pinned tools live in the activity rail, including core tools when explicitly pinned;
+- pinned tools live in the activity rail; new projects start with UMD Forge pinned, and every pin can still be added or removed per workspace;
 - no wrapper Inspector, toolbar, status bar, Tools sidebar or special Welcome tab;
 - Help is a separate static `help.html`, outside project/tab/tool lifecycle;
 - project file/folder mutation controls live in Project Explorer rather than a duplicate Project menu.
 - workspace Search is wrapper-owned, exact Text/Hex only, worker-backed and chunked; automatic content scanning is bounded per file and in aggregate, with the remainder explicitly deferred.
+- file opening prefers the lightweight Image Viewer for supported images, uses Hex Viewer only as a wildcard fallback when no format-specific handler exists, and always gives saved workspace associations precedence.
 
 ### Shell / tabs
 

@@ -1,4 +1,4 @@
-import { escapeHtml as esc, formatBytes } from '../../shared/utils/format.js?v=0.14.3';
+import { escapeHtml as esc, formatBytes } from '../../shared/utils/format.js?v=0.14.5';
 
 const AUTO_SCAN_LIMIT = 32 * 1024 * 1024;
 const AUTO_SCAN_BUDGET = 256 * 1024 * 1024;
@@ -6,7 +6,7 @@ const MAX_PATTERN_BYTES = 64 * 1024;
 const MAX_NAME_RESULTS = 1000;
 const MAX_CONTENT_RESULTS = 2000;
 const SEARCH_BATCH_FILES = 256;
-const WORKER_URL = new URL('../workers/search-worker.js?v=0.14.3', import.meta.url);
+const WORKER_URL = new URL('../workers/search-worker.js?v=0.14.5', import.meta.url);
 const NON_CONTENT_CHANGES = new Set(['tool-pinned', 'tool-unpinned', 'tool-suggested', 'file-association-changed']);
 
 function walkFiles(root) {

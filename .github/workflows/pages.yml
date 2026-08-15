@@ -40,6 +40,8 @@ jobs:
           node tests/project-fuzz.mjs
           node tests/core-hygiene.mjs
           node tests/search.mjs
+          node tests/eboot-decrypter.mjs
+          node tests/file-open-policy.mjs
           node tests/assets.mjs
 
       - name: Setup Pages

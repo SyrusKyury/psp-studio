@@ -6,7 +6,10 @@ The project uses plain HTML, CSS and JavaScript. There is no package manager, se
 
 ## Included tools
 
+- Hex Viewer: fast read-only hexadecimal inspection for generic files and binary formats without a dedicated handler.
+- Image Viewer: lightweight local preview for common browser-supported image formats; it is the default image opener.
 - UMD Forge: ISO, CSO and DAX image workspace with file replacement, extraction, rebuild, LBA tools and patch support.
+- EBOOT Decrypter: decrypt PSP EBOOT/PRX executables into verified ELF files that can be dragged back into the workspace.
 - SFO Studio: PARAM.SFO editor.
 - Image Studio: image editing through an embedded Photopea session.
 
@@ -53,6 +56,8 @@ node tests/dnd-bridge.mjs
 node tests/project-fuzz.mjs
 node tests/core-hygiene.mjs
 node tests/search.mjs
+node tests/eboot-decrypter.mjs
+node tests/file-open-policy.mjs
 node tests/assets.mjs
 ```
 

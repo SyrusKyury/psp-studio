@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Image Viewer</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="image-viewer-tool">
+    <header class="viewer-toolbar">
+      <button class="button" id="viewer-open" type="button">Open image</button>
+      <div class="toolbar-separator"></div>
+      <button class="icon-tool" id="zoom-out" type="button" title="Zoom out" disabled>−</button>
+      <button class="zoom-value" id="zoom-value" type="button" title="Reset to 100%" disabled>100%</button>
+      <button class="icon-tool" id="zoom-in" type="button" title="Zoom in" disabled>+</button>
+      <button class="button" id="zoom-fit" type="button" disabled>Fit</button>
+      <div class="spacer"></div>
+      <span class="viewer-mode">Read-only preview</span>
+      <input class="hidden" id="viewer-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/bmp,image/avif,image/x-icon,.ico">
+    </header>
+
+    <main class="viewer-main" id="viewer-drop" data-file="document">
+      <section class="viewer-empty" id="viewer-empty">
+        <div class="viewer-empty-icon">IMG</div>
+        <h1>Image Viewer</h1>
+        <p>Open an image or drop one here from the Project Explorer. Use Open With when you want to edit it instead.</p>
+        <button class="button primary" id="viewer-open-empty" type="button">Open image</button>
+      </section>
+
+      <section class="viewer-workspace hidden" id="viewer-workspace">
+        <div class="image-stage" id="image-stage">
+          <img id="image-preview" alt="">
+        </div>
+      </section>
+    </main>
+
+    <footer class="viewer-statusbar">
+      <span id="viewer-status">Ready</span>
+      <div class="spacer"></div>
+      <span id="viewer-dimensions">-</span>
+      <span class="status-separator"></span>
+      <span id="viewer-format">-</span>
+      <span class="status-separator"></span>
+      <span id="viewer-size">-</span>
+    </footer>
+  </div>
+  <script type="module" src="./tool.js"></script>
+</body>
+</html>

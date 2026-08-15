@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { TransferRegistry, PROJECT_NODE_MIME } from '../js/core/transfer-registry.js?v=0.14.3';
-import { ModuleHost } from '../js/core/module-host.js?v=0.14.3';
+import { TransferRegistry, PROJECT_NODE_MIME } from '../js/core/transfer-registry.js?v=0.14.5';
+import { ModuleHost } from '../js/core/module-host.js?v=0.14.5';
 
 const transfers = new TransferRegistry();
 const node = { id: 'file-1', name: 'PATCH.BIN', path: '/PATCH.BIN', isDirectory: false, blob: new Blob([new Uint8Array([1,2,3,4])], { type: 'application/octet-stream' }) };

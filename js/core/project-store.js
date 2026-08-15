@@ -1,5 +1,5 @@
-import { createStoredZip, readZip } from '../../shared/archive/zip-store.js?v=0.14.3';
-import { isBlobLike, toRealmBlob } from './blob-utils.js?v=0.14.3';
+import { createStoredZip, readZip } from '../../shared/archive/zip-store.js?v=0.14.5';
+import { isBlobLike, toRealmBlob } from './blob-utils.js?v=0.14.5';
 
 const PROJECT_FORMAT = 'psp-modding-studio-project';
 const PROJECT_VERSION = 1;
@@ -209,6 +209,12 @@ class ProjectNode {
 }
 
 export class ProjectStore extends EventTarget {
+  static createNew(name = 'Untitled Project') {
+    const project = new ProjectStore(name);
+    project.#workspace = freezeWorkspace({ pinnedTools: ['umd-forge'] });
+    return project;
+  }
+
   #name;
   #workspace = freezeWorkspace();
   #revision = 0;

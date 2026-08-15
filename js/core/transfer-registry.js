@@ -1,5 +1,5 @@
-import { waitBounded } from './async-utils.js?v=0.14.3';
-import { safeText } from '../../shared/utils/format.js?v=0.14.3';
+import { waitBounded } from './async-utils.js?v=0.14.5';
+import { safeText } from '../../shared/utils/format.js?v=0.14.5';
 export const TOOL_TRANSFER_MIME = 'application/x-psp-studio-transfer';
 export const PROJECT_NODE_MIME = 'application/x-psp-project-node';
 const TRANSFER_TTL_MS = 5 * 60 * 1000;

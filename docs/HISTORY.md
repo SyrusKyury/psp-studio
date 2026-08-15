@@ -1,5 +1,8 @@
 # PSP Modding Studio - compact history
 
+- **0.14.5** - pins UMD Forge by default for newly created projects while preserving the exact pin state of existing/loaded `.pspstudio` workspaces.
+- **0.14.4** - adds Hex Viewer and Image Viewer as lightweight core inspection tools. File routing now treats Image Viewer as the default image handler, uses Hex Viewer as the wildcard fallback for files without a dedicated handler, and keeps saved workspace associations plus Open With overrides authoritative.
+- **Tool: EBOOT Decrypter 1.0.0** - adds a Tool API v1 executable utility that opens/drops PSP EBOOT/PRX files, decrypts supported ~PSP payloads with a lazily loaded KIRK WebAssembly engine, handles gzip-compressed payloads, verifies ELF output and exposes the result as a draggable workspace file.
 - **0.14.3** - Drag-and-drop lifecycle hardening: project drop overlays are cleared deterministically across main-document/tool-iframe boundaries on drag end, drop, cancellation, blur, Escape and subsequent pointer interaction; tool drops also close active project drag sessions. Release cache tags are coherent at 0.14.3.
 This file replaces the former per-release `V0.x_NOTES.md` collection. It records architectural milestones only; the current contract is defined by `CORE_BASELINE.md`, `ARCHITECTURE.md`, `TOOL_CONTRACT.md` and `PROJECT_FORMAT.md`.
 

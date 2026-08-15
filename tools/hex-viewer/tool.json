@@ -1,0 +1,12 @@
+{
+  "api": 1,
+  "name": "Hex Viewer",
+  "description": "Fast read-only hexadecimal viewer for binary files and formats without a dedicated PSP Studio tool.",
+  "author": "PSP Modding Studio",
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "accepts": ["*"],
+  "keywords": [
+    "hex", "binary", "bytes", "viewer", "dump", "offset", "ascii", "bin", "raw"
+  ]
+}

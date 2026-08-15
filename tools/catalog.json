@@ -1,6 +1,9 @@
 {
   "core": [
+    "hex-viewer",
+    "image-viewer",
     "umd-forge",
+    "eboot-decrypter",
     "sfo-studio",
     "image-studio"
   ],

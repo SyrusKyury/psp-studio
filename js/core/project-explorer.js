@@ -1,9 +1,9 @@
-import { isFileLike, toRealmBlob } from './blob-utils.js?v=0.14.3';
-import { abortError, isStudioAbort, waitBounded } from './async-utils.js?v=0.14.3';
-import { bindShortcuts, shortcutLabel } from './shortcut-manager.js?v=0.14.3';
-import { projectNodeIcon } from './file-icon-service.js?v=0.14.3';
-import { TOOL_TRANSFER_MIME, PROJECT_NODE_MIME } from './transfer-registry.js?v=0.14.3';
-import { escapeHtml as esc, formatBytes, errorText } from '../../shared/utils/format.js?v=0.14.3';
+import { isFileLike, toRealmBlob } from './blob-utils.js?v=0.14.5';
+import { abortError, isStudioAbort, waitBounded } from './async-utils.js?v=0.14.5';
+import { bindShortcuts, shortcutLabel } from './shortcut-manager.js?v=0.14.5';
+import { projectNodeIcon } from './file-icon-service.js?v=0.14.5';
+import { TOOL_TRANSFER_MIME, PROJECT_NODE_MIME } from './transfer-registry.js?v=0.14.5';
+import { escapeHtml as esc, formatBytes, errorText } from '../../shared/utils/format.js?v=0.14.5';
 
 const MAX_TRANSFER_FILES = 20000;
 const MAX_TRANSFER_NODES = 50000;

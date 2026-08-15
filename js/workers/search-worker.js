@@ -1,4 +1,4 @@
-import { searchBlob } from '../core/blob-search.js?v=0.14.3';
+import { searchBlob } from '../core/blob-search.js?v=0.14.5';
 
 const DEFAULT_CHUNK_BYTES = 4 * 1024 * 1024;
 const DEFAULT_FILE_MATCH_LIMIT = 200;

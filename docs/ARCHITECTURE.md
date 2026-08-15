@@ -96,7 +96,7 @@ All methods are optional.
 - `core`: always available Studio tools. They may also be pinned for quick access.
 - `tools`: all other catalog tools. They may be pinned per workspace.
 
-Tool authors do not declare `core` or `pinned` in `tool.json`. Pinning is purely a workspace presentation choice.
+Tool authors do not declare `core` or `pinned` in `tool.json`. Pinning is purely a workspace presentation choice. Newly created projects seed `umd-forge` as the sole default pin; loaded projects keep the pin state stored in their own manifest.
 
 The Tool Library searches all catalog metadata. A game-specific tool can make itself easy to find with a descriptive name, description and optional `keywords`; the Studio does not infer or track the current game.
 
@@ -107,9 +107,13 @@ The Tool Library searches all catalog metadata. A game-specific tool can make it
 ```text
 saved association
     v
-one compatible tool
+Image Viewer for supported images
     v
-Open With chooser when multiple tools are possible
+one format-specific handler
+    v
+Hex Viewer as generic fallback
+    v
+Open With chooser when multiple format-specific tools are possible
 ```
 
 The chooser orders compatible tools as:
@@ -120,6 +124,8 @@ Suggested
 Core
 Other compatible tools
 ```
+
+The lightweight viewer policy only chooses an automatic opener; it is not an availability filter. Hex Viewer remains available through Open With because it accepts `*`, and Image Studio remains compatible with the image formats it declares.
 
 Pinned and Suggested are ranking/presentation hints, not availability filters. Any compatible catalog tool remains available in Open With. Suggested is updated only after a tool chosen explicitly in the chooser opens successfully.
 

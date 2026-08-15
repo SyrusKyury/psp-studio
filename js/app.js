@@ -1,17 +1,18 @@
-import { Registry } from './core/registry.js?v=0.14.3';
-import { UIService } from './core/ui-service.js?v=0.14.3';
-import { ProjectStore, savedTabKey } from './core/project-store.js?v=0.14.3';
-import { ProjectExplorer } from './core/project-explorer.js?v=0.14.3';
-import { TransferRegistry } from './core/transfer-registry.js?v=0.14.3';
-import { TabManager } from './core/tab-manager.js?v=0.14.3';
-import { bindShortcuts } from './core/shortcut-manager.js?v=0.14.3';
-import { OpenWithDialog } from './core/open-with-dialog.js?v=0.14.3';
-import { associationKeys, preferredAssociationKey, associationLabel } from './core/file-associations.js?v=0.14.3';
-import { ToolLibraryView } from './views/tool-library.js?v=0.14.3';
-import { ProjectSearch } from './views/project-search.js?v=0.14.3';
-import { escapeHtml, errorText, isAbortError } from '../shared/utils/format.js?v=0.14.3';
+import { Registry } from './core/registry.js?v=0.14.5';
+import { UIService } from './core/ui-service.js?v=0.14.5';
+import { ProjectStore, savedTabKey } from './core/project-store.js?v=0.14.5';
+import { ProjectExplorer } from './core/project-explorer.js?v=0.14.5';
+import { TransferRegistry } from './core/transfer-registry.js?v=0.14.5';
+import { TabManager } from './core/tab-manager.js?v=0.14.5';
+import { bindShortcuts } from './core/shortcut-manager.js?v=0.14.5';
+import { OpenWithDialog } from './core/open-with-dialog.js?v=0.14.5';
+import { associationKeys, preferredAssociationKey, associationLabel } from './core/file-associations.js?v=0.14.5';
+import { automaticHandler } from './core/file-open-policy.js?v=0.14.5';
+import { ToolLibraryView } from './views/tool-library.js?v=0.14.5';
+import { ProjectSearch } from './views/project-search.js?v=0.14.5';
+import { escapeHtml, errorText, isAbortError } from '../shared/utils/format.js?v=0.14.5';
 
-const VERSION = '0.14.3';
+const VERSION = '0.14.5';
 
 function requiredElement(selector) {
   const element = document.querySelector(selector);
@@ -203,7 +204,7 @@ async function createProject() {
     if (!(await canReplaceProject())) return;
     const name = prompt('Project name', 'My PSP Project')?.trim();
     if (!name) return;
-    await startProject(new ProjectStore(name));
+    await startProject(ProjectStore.createNew(name));
     ui.toast('Project created. Add files or open a tool.', 'success');
   }, 'Could not create project');
 }
@@ -259,7 +260,7 @@ async function openProjectFile(node, { forceChooser = false } = {}) {
 
   const saved = resolveSavedAssociation(node.name, handlers);
   let tool = !forceChooser && saved ? registry.get(saved.toolId) : null;
-  if (!tool && !forceChooser && handlers.length === 1) tool = handlers[0];
+  if (!tool && !forceChooser) tool = automaticHandler(node.name, handlers);
 
   let choice = null;
   let associationKey = null;

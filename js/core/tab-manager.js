@@ -1,5 +1,5 @@
-import { ModuleHost } from './module-host.js?v=0.14.3';
-import { escapeHtml, safeText } from '../../shared/utils/format.js?v=0.14.3';
+import { ModuleHost } from './module-host.js?v=0.14.5';
+import { escapeHtml, safeText } from '../../shared/utils/format.js?v=0.14.5';
 
 function tabId() { return globalThis.crypto?.randomUUID?.() || `tab-${Date.now()}-${Math.random()}`; }
 function safeTabTitle(value, fallback = 'Untitled') { return safeText(value, 512).trim() || safeText(fallback, 512, 'Untitled').trim() || 'Untitled'; }

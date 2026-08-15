@@ -234,7 +234,7 @@ assert(flatten(deepProject).length === beforeDeepPaste, 'Too-deep clipboard past
 
 // Static module graph: every relative dependency must resolve, contain no cycle, and wrapper imports share one cache version.
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const releaseVersion = '0.14.3';
+const releaseVersion = '0.14.5';
 const importRe = /^\s*import\s+(?:[^'";]+?\s+from\s+)?['"]([^'"]+)['"];?/gm;
 const graph = new Map();
 async function walkModule(relative) {
