@@ -5,7 +5,10 @@
     "umd-forge",
     "eboot-decrypter",
     "sfo-studio",
-    "image-studio"
+    "image-studio",
+    "gim-studio"
   ],
-  "tools": []
+  "tools": [
+    "7cip"
+  ]
 }

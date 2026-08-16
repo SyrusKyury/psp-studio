@@ -1,0 +1,24 @@
+{
+  "api": 1,
+  "name": "7-CIP",
+  "description": "Lazy-loading archive editor with safe GIM extraction and warning-based CPM format replacement for Yu-Gi-Oh! Tag Force CIP-family card-art archives.",
+  "author": "SyrusKyury / PSP Modding Studio contributors",
+  "version": "1.7.1",
+  "icon": "icon.svg",
+  "accepts": [
+    ".cip",
+    ".cpm",
+    ".cpj",
+    ".cpl"
+  ],
+  "keywords": [
+    "yu-gi-oh",
+    "tag force",
+    "cip",
+    "cpm",
+    "cpj",
+    "cpl",
+    "card art",
+    "archive"
+  ]
+}

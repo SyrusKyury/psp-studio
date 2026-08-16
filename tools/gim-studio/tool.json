@@ -1,0 +1,28 @@
+{
+  "api": 1,
+  "name": "GIM Studio",
+  "description": "Inspect, convert and rebuild PSP GIM textures. Replacement preserves the original GIM profile; new GIM creation exposes PSP format, pixel-order and alignment settings.",
+  "author": "PSP Modding Studio",
+  "version": "1.2.1",
+  "icon": "icon.svg",
+  "accepts": [
+    ".gim",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp",
+    ".bmp"
+  ],
+  "keywords": [
+    "gim",
+    "texture",
+    "image",
+    "png",
+    "jpg",
+    "jpeg",
+    "psp",
+    "clut",
+    "dxt",
+    "swizzle"
+  ]
+}

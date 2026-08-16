@@ -251,3 +251,13 @@ Before submitting a change, run the regression suite and check the relevant docu
 PSP Modding Studio is released under the **GPL-3.0** license. See [`LICENSE`](LICENSE).
 
 Third-party components and their licenses are listed in [`THIRD_PARTY.md`](THIRD_PARTY.md) and in tool-specific notices where applicable.
+
+### GIM / 7-CIP codec checks
+
+For texture/archive regression checks:
+
+```bash
+node --experimental-default-type=module tests/gim-codec.test.mjs
+node --experimental-default-type=module tests/gim-7cip-integration.test.mjs
+node --experimental-default-type=module tests/7cip.mjs
+```

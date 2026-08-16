@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>GIM Studio</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="gim-tool">
+    <header class="gim-toolbar">
+      <button class="button primary" id="open-source" type="button">Open</button>
+      <div class="toolbar-separator"></div>
+      <button class="button" id="replace-image" type="button" disabled>Replace image</button>
+      <button class="button" id="export-png" type="button" disabled>Export PNG</button>
+      <button class="button" id="export-jpg" type="button" disabled>Export JPEG</button>
+      <div class="spacer"></div>
+      <span class="toolbar-mode" id="toolbar-mode">No file</span>
+      <input class="hidden" id="source-input" type="file" accept=".gim,image/png,image/jpeg,image/webp,image/bmp">
+      <input class="hidden" id="replace-input" type="file" accept="image/png,image/jpeg,image/webp,image/bmp">
+    </header>
+
+    <main class="gim-main" id="drop-root">
+      <section class="empty-state" id="empty-state" data-file="source">
+        <div class="empty-glyph">GIM</div>
+        <h1>GIM Studio</h1>
+        <p>Open a PSP <strong>.gim</strong> to export or replace its texture, or open PNG/JPEG to create a new GIM.</p>
+        <button class="button primary" id="open-empty" type="button">Open GIM or image</button>
+      </section>
+
+      <section class="workspace hidden" id="workspace">
+        <aside class="inspector">
+          <div class="panel-heading">Texture</div>
+          <dl class="facts">
+            <div><dt>File</dt><dd id="fact-file">-</dd></div>
+            <div><dt>Size</dt><dd id="fact-size">-</dd></div>
+            <div><dt>Format</dt><dd id="fact-format">-</dd></div>
+            <div><dt>Order</dt><dd id="fact-order">-</dd></div>
+            <div><dt>Palette</dt><dd id="fact-palette">-</dd></div>
+            <div><dt>Align</dt><dd id="fact-align">-</dd></div>
+          </dl>
+
+          <label class="field gim-only hidden" id="picture-field">
+            <span>Picture</span>
+            <select id="picture-select"></select>
+          </label>
+
+          <div class="panel-heading create-only">Create GIM</div>
+          <label class="field create-only">
+            <span>Pixel format</span>
+            <select id="create-format">
+              <option value="3">RGBA8888</option>
+              <option value="2">RGBA4444</option>
+              <option value="1">RGBA5551</option>
+              <option value="0">RGBA5650</option>
+              <option value="5">INDEX8 / 256 colors</option>
+              <option value="4">INDEX4 / 16 colors</option>
+              <option value="8">DXT1</option>
+              <option value="9">DXT3</option>
+              <option value="10">DXT5</option>
+            </select>
+          </label>
+          <label class="field create-only" id="order-field">
+            <span>Pixel order</span>
+            <select id="create-order">
+              <option value="0">normal</option>
+              <option value="1">faster (PSP swizzled)</option>
+            </select>
+          </label>
+          <div class="field-row create-only" id="alignment-fields">
+            <label class="field">
+              <span>Pitch align (bytes)</span>
+              <input id="create-pitch-align" type="number" min="1" max="65535" step="1" value="16">
+            </label>
+            <label class="field">
+              <span>Height align</span>
+              <input id="create-height-align" type="number" min="1" max="65535" step="1" value="1">
+            </label>
+          </div>
+          <div class="notice create-only" id="create-profile-notice">
+            <strong>Profile matters</strong>
+            <span>There is no single universal PSP GIM layout. For an existing game asset, open the original GIM and use Replace image. New GIM settings must match what the target game expects.</span>
+          </div>
+          <button class="button primary create-only full" id="build-gim" type="button">Build GIM</button>
+
+          <div class="notice gim-only" id="preserve-notice">
+            <strong>Safe replacement</strong>
+            <span>Replacement keeps the original format, dimensions, pixel order and container layout. The preview is decoded from the rebuilt GIM so it shows the bytes that will actually be exported.</span>
+          </div>
+        </aside>
+
+        <div class="preview-column">
+          <div class="preview-stage" id="preview-stage" data-file="source">
+            <canvas id="preview-canvas"></canvas>
+          </div>
+          <div class="export-strip">
+            <span>Drag outputs to the Project Explorer:</span>
+            <button class="output-chip" id="png-resource" type="button" data-file="png-output" disabled>PNG</button>
+            <button class="output-chip" id="jpg-resource" type="button" data-file="jpg-output" disabled>JPEG</button>
+            <button class="output-chip" id="gim-resource" type="button" data-file="gim-output" disabled>GIM</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="statusbar">
+      <span id="status">Ready</span>
+      <div class="spacer"></div>
+      <span id="status-detail">GIM 1.00 / PSP</span>
+    </footer>
+  </div>
+  <script type="module" src="./tool.js"></script>
+</body>
+</html>

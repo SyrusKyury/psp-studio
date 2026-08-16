@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>7-CIP</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="tool-page">
+  <div class="cip-app">
+    <header class="cip-toolbar">
+      <button class="button" id="open-btn" type="button">Open archive</button>
+      <button class="button" id="new-btn" type="button">New archive</button>
+      <button class="button" id="add-btn" type="button" disabled>Add files</button>
+      <button class="button" id="test-btn" type="button" disabled>Test</button>
+      <button class="button" id="info-btn" type="button" disabled>Info</button>
+      <span class="divider"></span>
+      <button class="button" id="undo-btn" type="button" disabled>Undo</button>
+      <button class="button" id="redo-btn" type="button" disabled>Redo</button>
+      <span class="divider"></span>
+      <input class="cip-search" id="search" type="search" placeholder="Filter card ID or file..." disabled autocomplete="off">
+      <div class="spacer"></div>
+      <div class="cip-resource empty" id="archive-resource" data-file="archive.cip" title="Drag the rebuilt archive into the Project Explorer">
+        <span id="archive-resource-name">No archive</span>
+      </div>
+      <button class="button primary" id="build-btn" type="button" disabled>Build archive</button>
+      <input class="hidden" id="open-input" type="file" accept=".cip,.cpm,.cpj,.cpl,application/octet-stream">
+      <input class="hidden" id="add-input" type="file" multiple>
+    </header>
+
+    <main class="cip-main" id="main">
+      <section class="cip-welcome" id="welcome">
+        <div class="cip-welcome-card">
+          <div class="cip-logo">7-CIP</div>
+          <div class="eyebrow">Tag Force archive editor</div>
+          <h1>Open or create a CIP archive</h1>
+          <p>Extract, replace, add and rebuild card-art archives directly in the browser. Large archives are indexed lazily, and CIP, CPM, CPJ and CPL are supported.</p>
+          <div class="welcome-actions">
+            <button class="button primary" id="welcome-open" type="button">Open archive</button>
+            <button class="button" id="welcome-new" type="button">Create new</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="cip-workspace hidden" id="workspace">
+        <aside class="cip-sidebar">
+          <h2>Archive</h2>
+          <dl class="cip-summary">
+            <div><dt>File</dt><dd id="summary-file">-</dd></div>
+            <div><dt>Type</dt><dd id="summary-type">-</dd></div>
+            <div><dt>Entries</dt><dd id="summary-entries">0</dd></div>
+            <div><dt>Card range</dt><dd id="summary-range">-</dd></div>
+            <div><dt>Slot size</dt><dd id="summary-slot">-</dd></div>
+            <div><dt>Header</dt><dd id="summary-header">-</dd></div>
+          </dl>
+
+          <div class="cip-profile hidden" id="profile-wrap">
+            <label for="cpj-profile">CPJ profile</label>
+            <select id="cpj-profile">
+              <option value="standard">Tag Force 3-6 (512x512)</option>
+              <option value="tfsp">Tag Force Special (256x256)</option>
+            </select>
+            <p>CPJ does not encode this distinction in its magic. This mirrors CIPTool's normal vs <code>-s</code> mode.</p>
+          </div>
+
+          <div class="cip-warnings hidden" id="warnings-wrap">
+            <h3>Warnings</h3>
+            <div id="warnings"></div>
+          </div>
+
+          <div class="cip-help">
+            <strong>PSP Studio</strong>
+            <p>Large archives are indexed without decoding every payload. Select entries with Ctrl/Cmd+click or Shift+click. Drag <em>Selected</em> or <em>All entries</em> into the Project Explorer to extract multiple files. Test reads CPJ slots one at a time and can be cancelled. Shortcuts: Ctrl/Cmd+A select visible, F2 rename, Delete remove, Ctrl/Cmd+Z undo, Ctrl/Cmd+Y redo, Ctrl/Cmd+F filter.</p>
+          </div>
+        </aside>
+
+        <section class="cip-browser">
+          <div class="cip-browser-head">
+            <div>
+              <h2>Archive entries</h2>
+              <p id="browser-note">Card IDs are preserved when rebuilding.</p>
+            </div>
+            <div class="cip-export-actions">
+              <button class="button" id="rename-btn" type="button" disabled title="Rename selected entry (F2)">Rename</button>
+              <button class="button danger" id="delete-selected-btn" type="button" disabled title="Delete selected entries (Delete)">Delete</button>
+              <span class="cip-selection-summary" id="selection-summary">0 selected</span>
+              <div class="cip-resource cip-export-resource empty" id="selection-resource" data-folder="selected" title="Drag the selected entries into the Project Explorer">
+                <span>Selected</span>
+                <strong id="selected-count">0</strong>
+              </div>
+              <div class="cip-resource cip-export-resource empty" id="entries-resource" data-folder="entries" title="Drag all entries into the Project Explorer">
+                <span>All entries</span>
+                <strong id="resource-count">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="cip-table-wrap">
+            <table class="cip-table">
+              <thead>
+                <tr>
+                  <th class="select-col"><input id="select-all" class="cip-check" type="checkbox" aria-label="Select all visible entries"></th>
+                  <th aria-sort="ascending"><button class="sort-button active" type="button" data-sort="cardId">Card ID <span class="sort-indicator">^</span></button></th>
+                  <th aria-sort="none"><button class="sort-button" type="button" data-sort="art">Art <span class="sort-indicator"></span></button></th>
+                  <th aria-sort="none"><button class="sort-button" type="button" data-sort="name">File <span class="sort-indicator"></span></button></th>
+                  <th aria-sort="none"><button class="sort-button" type="button" data-sort="size">Size <span class="sort-indicator"></span></button></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="entry-body"></tbody>
+            </table>
+            <div class="cip-empty hidden" id="empty">No entries match the current filter.</div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="cip-statusbar">
+      <span id="status">Ready</span>
+      <span class="status-separator">|</span>
+      <span id="status-type">No archive</span>
+      <div class="spacer"></div>
+      <span id="status-dirty">Clean</span>
+    </footer>
+  </div>
+
+  <dialog id="new-dialog" class="cip-dialog">
+    <form method="dialog" id="new-form">
+      <h2>New archive</h2>
+      <label>
+        <span>Archive type</span>
+        <select id="new-type">
+          <option value="CIP">CIP - Card Image Pack</option>
+          <option value="CPM">CPM - Card Picture Middle</option>
+          <option value="CPJ">CPJ - Card Picture JPEG</option>
+          <option value="CPL">CPL - Card Palette</option>
+        </select>
+      </label>
+      <label id="new-profile-wrap" class="hidden">
+        <span>CPJ profile</span>
+        <select id="new-profile">
+          <option value="standard">Tag Force 3-6 (512x512)</option>
+          <option value="tfsp">Tag Force Special (256x256)</option>
+        </select>
+      </label>
+      <label>
+        <span>Filename</span>
+        <input id="new-name" value="cards.cip" autocomplete="off">
+      </label>
+      <div class="dialog-actions">
+        <button class="button" value="cancel" type="button" id="new-cancel">Cancel</button>
+        <button class="button primary" value="default" type="submit">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+
+  <dialog id="rename-dialog" class="cip-dialog">
+    <form method="dialog" id="rename-form">
+      <h2>Rename entry</h2>
+      <p class="dialog-note">In CIP archives the file name is derived from the card ID and alternate-art index.</p>
+      <label>
+        <span>Card ID</span>
+        <input id="rename-card-id" inputmode="numeric" autocomplete="off" required>
+      </label>
+      <label>
+        <span>Alternate-art index</span>
+        <input id="rename-alt-index" inputmode="numeric" autocomplete="off" placeholder="Blank = base art">
+      </label>
+      <div class="dialog-actions">
+        <button class="button" type="button" id="rename-cancel">Cancel</button>
+        <button class="button primary" type="submit">Rename</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="info-dialog" class="cip-dialog cip-dialog-wide">
+    <form method="dialog">
+      <h2>Archive information</h2>
+      <dl class="cip-info" id="info-body"></dl>
+      <div class="dialog-actions">
+        <button class="button primary" type="button" id="info-close">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="test-dialog" class="cip-dialog cip-dialog-wide">
+    <form method="dialog">
+      <h2>Archive test</h2>
+      <pre class="cip-test-report" id="test-report"></pre>
+      <div class="dialog-actions">
+        <button class="button primary" type="button" id="test-close">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="./tool.js"></script>
+</body>
+</html>
